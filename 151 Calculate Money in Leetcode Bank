@@ -1,0 +1,33 @@
+import java.util.Scanner;
+
+public class Main {
+
+    public static int totalMoney(int n) {
+        int total = 0;
+        int start = 1;
+        int amount = 1;
+
+        for (int day = 1; day <= n; day++) {
+            total += amount;
+            amount++;
+
+            // New week starts
+            if (day % 7 == 0) {
+                start++;
+                amount = start;
+            }
+        }
+
+        return total;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+
+        System.out.println(totalMoney(n));
+
+        sc.close();
+    }
+}
