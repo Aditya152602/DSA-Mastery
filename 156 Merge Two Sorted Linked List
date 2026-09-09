@@ -1,0 +1,57 @@
+public class MergeTwoSortedLinkedList {
+    static class Node{
+    int data;
+    Node next;
+        public Node (int data){
+            this.data = data;
+            this.next = null;
+        }
+    }
+    public static int MergeTwoSortedLinkedList(Node head1, Node head2){
+
+        Node dummy = new Node(0);
+        Node current = dummy;
+
+        while (head1 != null && head2 != null) {
+            if (head1.data <= head2.data) {
+                current.next = head1;
+                head1 = head1.next;
+            } else {
+                current.next = head2;
+                head2 = head2.next;
+            }
+            current = current.next;
+        }
+
+        // Attach the remaining nodes, if any
+        if (head1 != null) {
+            current.next = head1;
+        } else {
+            current.next = head2;
+        }
+
+        // Return the merged list starting from the next of dummy node
+        return dummy.next.data; // Assuming you want to return the data of the merged list's head
+
+
+    }
+
+    static void main() {
+
+        Node first1 = new Node(10);
+        Node second1 = new Node(20);
+        Node third1 = new Node(30);
+        first1.next = second1;
+        second1.next = third1;
+
+        Node first2 = new Node(15);
+        Node second2 = new Node(25);
+        Node third2 = new Node(35);
+        first2.next = second2;
+        second2.next = third2;
+
+        int mergedHeadData = MergeTwoSortedLinkedList(first1, first2);
+        System.out.println("Head of Merged List: " + mergedHeadData);
+    }
+
+}
