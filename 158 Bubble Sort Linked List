@@ -1,0 +1,52 @@
+public class SortLinkedList {
+    static class Node{
+        int data;
+        Node next;
+        public Node(int data) {
+            this.data=data;
+            this.next=null;
+        }
+    }
+    public static void sortLinkedList(Node head, int n) {
+        Node current = head;
+
+        for (int i = 0; i < n; i++) {
+
+            for (int j = i + 1; j < n; j++) {
+
+                if (current.data > current.next.data) {
+                    int temp = current.data;
+                    current.data = current.next.data;
+                    current.next.data = temp;
+                }
+
+                current = current.next;
+            }
+
+            current = head;
+        }
+    }
+
+    public static void main(String[] args) {
+        Node first = new Node(10);
+        Node second = new Node(60);
+        Node third = new Node(30);
+        Node fourth = new Node(40);
+        Node fifth = new Node(70);
+
+        first.next = second;
+        second.next = third;
+        third.next = fourth;
+        fourth.next = fifth;
+
+        int n=5;
+        sortLinkedList(first,n);
+
+        // Print the sorted list
+        Node current = first;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+    }
+}
