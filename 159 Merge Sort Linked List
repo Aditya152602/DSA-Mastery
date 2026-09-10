@@ -1,0 +1,99 @@
+public class SortLinkedList {
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Merge Sort
+    public static Node sortLinkedList(Node head) {
+
+        // Step 1: If list has 0 or 1 node, it is already sorted
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // Step 2: Find the middle
+        Node slow = head;
+        Node fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Step 3: Split the list
+        Node second = slow.next;
+        slow.next = null;
+
+        // Step 4: Sort both halves
+        Node first = sortLinkedList(head);
+        second = sortLinkedList(second);
+
+        // Step 5: Merge both sorted halves
+        return merge(first, second);
+    }
+
+    // Merge two sorted linked lists
+    public static Node merge(Node first, Node second) {
+
+        Node head;
+
+        if (first.data <= second.data) {
+            head = first;
+            first = first.next;
+        } else {
+            head = second;
+            second = second.next;
+        }
+
+        Node current = head;
+
+        while (first != null && second != null) {
+
+            if (first.data <= second.data) {
+                current.next = first;
+                first = first.next;
+            } else {
+                current.next = second;
+                second = second.next;
+            }
+
+            current = current.next;
+        }
+
+        if (first != null) {
+            current.next = first;
+        } else {
+            current.next = second;
+        }
+
+        return head;
+    }
+
+    public static void main(String[] args) {
+
+        Node first = new Node(4);
+        Node second = new Node(2);
+        Node third = new Node(1);
+        Node fourth = new Node(3);
+
+        first.next = second;
+        second.next = third;
+        third.next = fourth;
+
+        Node head = sortLinkedList(first);
+
+        Node current = head;
+
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+    }
+}
