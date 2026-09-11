@@ -1,0 +1,86 @@
+```java
+public class LinkedListPalindrome {
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Reverse a linked list
+    static Node reverse(Node head) {
+        Node prev = null;
+        Node curr = head;
+
+        while (curr != null) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
+    }
+
+    // Check whether linked list is palindrome
+    static boolean isPalindrome(Node head) {
+
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        // Find the middle
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Skip middle node if the list has odd number of nodes
+        if (fast != null) {
+            slow = slow.next;
+        }
+
+        // Reverse the second half
+        Node secondHalf = reverse(slow);
+
+        // Compare first half and reversed second half
+        Node firstHalf = head;
+
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
+                return false;
+            }
+
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+
+        Node first = new Node(1);
+        Node second = new Node(2);
+        Node third = new Node(2);
+        Node fourth = new Node(1);
+
+        first.next = second;
+        second.next = third;
+        third.next = fourth;
+
+        if (isPalindrome(first)) {
+            System.out.println("Yes, Linked List is a Palindrome");
+        } else {
+            System.out.println("No, Linked List is not a Palindrome");
+        }
+    }
+}
+```
