@@ -1,0 +1,98 @@
+public class AddTwoNumbers {
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    static Node reverse(Node head) {
+
+        Node prev = null;
+        Node curr = head;
+
+        while (curr != null) {
+
+            Node next = curr.next;
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
+    }
+
+    static Node addNumbers(Node first, Node second) {
+
+        first = reverse(first);
+        second = reverse(second);
+
+        Node result = null;
+        Node tail = null;
+
+        int carry = 0;
+
+        while (first != null || second != null || carry != 0) {
+
+            int sum = carry;
+
+            if (first != null) {
+                sum += first.data;
+                first = first.next;
+            }
+
+            if (second != null) {
+                sum += second.data;
+                second = second.next;
+            }
+
+            Node newNode = new Node(sum % 10);
+
+            if (result == null) {
+                result = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+
+            carry = sum / 10;
+        }
+
+        return reverse(result);
+    }
+
+    static void printList(Node head) {
+
+        Node curr = head;
+
+        while (curr != null) {
+            System.out.print(curr.data);
+
+            if (curr.next != null) {
+                System.out.print(" → ");
+            }
+
+            curr = curr.next;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Node first = new Node(2);
+        first.next = new Node(4);
+        first.next.next = new Node(3);
+
+        Node second = new Node(5);
+        second.next = new Node(6);
+        second.next.next = new Node(4);
+
+        Node result = addNumbers(first, second);
+
+        printList(result);
+    }
+}
