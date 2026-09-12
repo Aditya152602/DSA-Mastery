@@ -1,0 +1,91 @@
+public class FlattenMultilevelDoublyLinkedList {
+
+    static class Node {
+        int data;
+        Node prev;
+        Node next;
+        Node child;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    static Node flatten(Node head) {
+
+        if (head == null) {
+            return null;
+        }
+
+        Node curr = head;
+
+        while (curr != null) {
+
+            if (curr.child != null) {
+
+                Node next = curr.next;
+                Node child = curr.child;
+
+                curr.next = child;
+                child.prev = curr;
+
+                curr.child = null;
+
+                Node temp = child;
+
+                while (temp.next != null) {
+                    temp = temp.next;
+                }
+
+                temp.next = next;
+
+                if (next != null) {
+                    next.prev = temp;
+                }
+            }
+
+            curr = curr.next;
+        }
+
+        return head;
+    }
+
+    static void printList(Node head) {
+
+        Node curr = head;
+
+        while (curr != null) {
+            System.out.print(curr.data + " ");
+            curr = curr.next;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Node first = new Node(1);
+        Node second = new Node(2);
+        Node third = new Node(3);
+
+        Node seventh = new Node(7);
+        Node eighth = new Node(8);
+        Node ninth = new Node(9);
+
+        first.next = second;
+        second.prev = first;
+
+        second.next = third;
+        third.prev = second;
+
+        seventh.next = eighth;
+        eighth.prev = seventh;
+
+        eighth.next = ninth;
+        ninth.prev = eighth;
+
+        second.child = seventh;
+
+        Node head = flatten(first);
+
+        printList(head);
+    }
+}
