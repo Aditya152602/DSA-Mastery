@@ -1,0 +1,52 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class LetterCombinations {
+
+    // Maps each digit to its corresponding letters (like phone keypad)
+    private static final String[] KEYPAD = {
+        "",     // 0 - unused
+        "",     // 1 - unused
+        "abc",  // 2
+        "def",  // 3
+        "ghi",  // 4
+        "jkl",  // 5
+        "mno",  // 6
+        "pqrs", // 7
+        "tuv",  // 8
+        "wxyz"  // 9
+    };
+
+    public static List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        if (digits == null || digits.length() == 0) {
+            return result;              // empty input -> empty output
+        }
+        backtrack(result, digits, 0, new StringBuilder());
+        return result;
+    }
+
+    // idx = which digit we're currently placing a letter for
+    // path = combo built so far
+    private static void backtrack(List<String> result, String digits, int idx, StringBuilder path) {
+        if (idx == digits.length()) {       // path length == digits length -> full combo done
+            result.add(path.toString());
+            return;
+        }
+
+        int digit = digits.charAt(idx) - '0';   // char -> int digit
+        String letters = KEYPAD[digit];          // possible letters for this digit
+
+        for (char c : letters.toCharArray()) {
+            path.append(c);                      // choose letter
+            backtrack(result, digits, idx + 1, path); // recurse to next digit
+            path.deleteCharAt(path.length() - 1);      // undo choice (backtrack)
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(letterCombinations("23"));   // expect [ad, ae, af, bd, be, bf, cd, ce, cf]
+        System.out.println(letterCombinations(""));      // expect []
+        System.out.println(letterCombinations("2"));      // expect [a, b, c]
+    }
+}
