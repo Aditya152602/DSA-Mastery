@@ -1,0 +1,36 @@
+import java.util.Arrays;
+
+public class TwoSumII {
+
+    // Solves LeetCode 167: Two Sum II - Input Array Is Sorted
+    public static int[] twoSum(int[] numbers, int target) {
+        int left = 0;                       // pointer starting at smallest element
+        int right = numbers.length - 1;      // pointer starting at largest element
+
+        while (left < right) {               // shrink window until pointers meet
+            int sum = numbers[left] + numbers[right]; // current pair sum
+
+            if (sum == target) {
+                return new int[]{left + 1, right + 1}; // +1 for 1-indexed result
+            } else if (sum < target) {
+                left++;                      // sum too small -> need bigger value -> move left up
+            } else {
+                right--;                     // sum too big -> need smaller value -> move right down
+            }
+        }
+
+        return new int[]{-1, -1};            // unreachable per problem guarantee, kept for compile safety
+    }
+
+    // Runnable entry point with test cases
+    public static void main(String[] args) {
+        int[] test1 = {1, 2, 3, 4};
+        System.out.println(Arrays.toString(twoSum(test1, 3))); // expect [1, 2]
+
+        int[] test2 = {2, 7, 11, 15};
+        System.out.println(Arrays.toString(twoSum(test2, 9))); // expect [1, 2]
+
+        int[] test3 = {-1, 0, 3, 5, 9, 12};
+        System.out.println(Arrays.toString(twoSum(test3, 8))); // expect [3, 5]
+    }
+}
