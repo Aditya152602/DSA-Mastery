@@ -1,0 +1,145 @@
+import java.util.Random;
+
+public class Main {
+
+    static class Node {
+
+        int value;
+        Node[] next;
+
+        Node(int value, int level) {
+            this.value = value;
+            next = new Node[level];
+        }
+    }
+
+    static class SkipList {
+
+        static final int MAX_LEVEL = 4;
+
+        Node head;
+        Random random;
+
+        SkipList() {
+            head = new Node(-1, MAX_LEVEL);
+            random = new Random();
+        }
+
+        // Randomly decide how many levels a node gets
+        int randomLevel() {
+
+            int level = 1;
+
+            while (random.nextBoolean() && level < MAX_LEVEL) {
+                level++;
+            }
+
+            return level;
+        }
+
+        // Search for a value
+        boolean search(int value) {
+
+            Node current = head;
+
+            // Start from highest level
+            for (int level = MAX_LEVEL - 1; level >= 0; level--) {
+
+                while (current.next[level] != null
+                        && current.next[level].value < value) {
+
+                    current = current.next[level];
+                }
+            }
+
+            current = current.next[0];
+
+            if (current != null && current.value == value) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Insert a value
+        void insert(int value) {
+
+            Node[] update = new Node[MAX_LEVEL];
+
+            Node current = head;
+
+            // Find position
+            for (int level = MAX_LEVEL - 1; level >= 0; level--) {
+
+                while (current.next[level] != null
+                        && current.next[level].value < value) {
+
+                    current = current.next[level];
+                }
+
+                update[level] = current;
+            }
+
+            // If value already exists
+            current = current.next[0];
+
+            if (current != null && current.value == value) {
+                return;
+            }
+
+            // Decide number of levels
+            int level = randomLevel();
+
+            Node newNode = new Node(value, level);
+
+            // Connect new node
+            for (int i = 0; i < level; i++) {
+
+                newNode.next[i] = update[i].next[i];
+
+                update[i].next[i] = newNode;
+            }
+        }
+
+        // Display all levels
+        void display() {
+
+            for (int level = MAX_LEVEL - 1; level >= 0; level--) {
+
+                System.out.print("Level " + level + ": ");
+
+                Node current = head.next[level];
+
+                while (current != null) {
+
+                    System.out.print(current.value + " ");
+
+                    current = current.next[level];
+                }
+
+                System.out.println();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        SkipList list = new SkipList();
+
+        list.insert(10);
+        list.insert(20);
+        list.insert(30);
+        list.insert(40);
+        list.insert(50);
+        list.insert(60);
+        list.insert(70);
+
+        list.display();
+
+        System.out.println();
+
+        System.out.println("Search 40: " + list.search(40));
+
+        System.out.println("Search 25: " + list.search(25));
+    }
+}
