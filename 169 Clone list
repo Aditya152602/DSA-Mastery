@@ -1,0 +1,121 @@
+public class Main {
+
+    static class Node {
+
+        int data;
+        Node next;
+        Node random;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    static Node cloneList(Node head) {
+
+        if (head == null) {
+            return null;
+        }
+
+        // STEP 1: Insert copied nodes
+        Node current = head;
+
+        while (current != null) {
+
+            Node copy = new Node(current.data);
+
+            copy.next = current.next;
+            current.next = copy;
+
+            current = copy.next;
+        }
+
+        // STEP 2: Set random pointers
+        current = head;
+
+        while (current != null) {
+
+            Node copy = current.next;
+
+            if (current.random != null) {
+                copy.random = current.random.next;
+            }
+
+            current = copy.next;
+        }
+
+        // STEP 3: Separate original and copied lists
+        current = head;
+
+        Node copyHead = head.next;
+
+        while (current != null) {
+
+            Node copy = current.next;
+
+            current.next = copy.next;
+
+            if (copy.next != null) {
+                copy.next = copy.next.next;
+            }
+
+            current = current.next;
+        }
+
+        return copyHead;
+    }
+
+    // Display list
+    static void display(Node head) {
+
+        Node current = head;
+
+        while (current != null) {
+
+            System.out.print("Node " + current.data);
+
+            if (current.random != null) {
+                System.out.print(
+                    " | Random → " + current.random.data
+                );
+            } else {
+                System.out.print(
+                    " | Random → null"
+                );
+            }
+
+            System.out.println();
+
+            current = current.next;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // Create original list
+        Node A = new Node(10);
+        Node B = new Node(20);
+        Node C = new Node(30);
+
+        // next pointers
+        A.next = B;
+        B.next = C;
+
+        // random pointers
+        A.random = C;
+        B.random = A;
+        C.random = B;
+
+        System.out.println("Original List:");
+
+        display(A);
+
+        Node copiedHead = cloneList(A);
+
+        System.out.println();
+
+        System.out.println("Copied List:");
+
+        display(copiedHead);
+    }
+}
