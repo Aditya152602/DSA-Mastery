@@ -1,0 +1,64 @@
+public class FlattenBinaryTree {
+
+    static class Node {
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    static void flatten(Node root) {
+
+        if (root == null) {
+            return;
+        }
+
+        if (root.left != null) {
+
+            Node rightSubtree = root.right;
+
+            root.right = root.left;
+            root.left = null;
+
+            Node current = root.right;
+
+            while (current.right != null) {
+                current = current.right;
+            }
+
+            current.right = rightSubtree;
+        }
+
+        flatten(root.right);
+    }
+
+    static void printList(Node root) {
+
+        Node current = root;
+
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.right;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Node root = new Node(1);
+
+        root.left = new Node(2);
+        root.right = new Node(5);
+
+        root.left.left = new Node(3);
+        root.left.right = new Node(4);
+
+        root.right.right = new Node(6);
+
+        flatten(root);
+
+        printList(root);
+    }
+}
