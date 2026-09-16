@@ -1,0 +1,91 @@
+public class DetectRemoveCycle {
+
+    static class Node {
+
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    static void detectAndRemoveCycle(Node head) {
+
+        Node slow = head;
+        Node fast = head;
+
+        // STEP 1: Detect cycle
+        while (fast != null && fast.next != null) {
+
+            slow = slow.next;
+            fast = fast.next.next;
+
+            // Cycle found
+            if (slow == fast) {
+
+                // STEP 2: Find cycle starting point
+                slow = head;
+
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+
+                // This is the beginning of the cycle
+                Node cycleStart = slow;
+
+                // STEP 3: Find the last node of the cycle
+                Node current = cycleStart;
+
+                while (current.next != cycleStart) {
+                    current = current.next;
+                }
+
+                // STEP 4: Remove the cycle
+                current.next = null;
+
+                return;
+            }
+        }
+    }
+
+    static void printList(Node head) {
+
+        Node current = head;
+
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        // Create nodes
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+        Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Node n5 = new Node(5);
+
+        // Normal connections
+        n1.next = n2;
+        n2.next = n3;
+        n3.next = n4;
+        n4.next = n5;
+
+        // Create cycle:
+        // 5 -> 3
+        n5.next = n3;
+
+        // Detect and remove cycle
+        detectAndRemoveCycle(n1);
+
+        // Print reconstructed list
+        printList(n1);
+    }
+}
