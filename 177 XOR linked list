@@ -1,0 +1,92 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class XORLinkedList {
+
+    static class Node {
+        int data;
+        int npx;
+
+        Node(int data) {
+            this.data = data;
+            this.npx = 0;
+        }
+    }
+
+    static Map<Integer, Node> nodes = new HashMap<>();
+
+    static int id(Node node) {
+        if (node == null)
+            return 0;
+
+        return System.identityHashCode(node);
+    }
+
+    static Node getNode(int id) {
+        return nodes.get(id);
+    }
+
+    static void add(Node node) {
+        nodes.put(id(node), node);
+    }
+
+    static Node insertAtEnd(Node head, int data) {
+
+        Node newNode = new Node(data);
+        add(newNode);
+
+        if (head == null)
+            return newNode;
+
+        Node prev = null;
+        Node current = head;
+
+        while (true) {
+
+            int nextId = id(prev) ^ current.npx;
+            Node next = getNode(nextId);
+
+            if (next == null)
+                break;
+
+            prev = current;
+            current = next;
+        }
+
+        current.npx = id(prev) ^ id(newNode);
+        newNode.npx = id(current);
+
+        return head;
+    }
+
+    static void printList(Node head) {
+
+        Node prev = null;
+        Node current = head;
+
+        while (current != null) {
+
+            System.out.print(current.data + " ");
+
+            int nextId = id(prev) ^ current.npx;
+            Node next = getNode(nextId);
+
+            prev = current;
+            current = next;
+        }
+
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        Node head = null;
+
+        head = insertAtEnd(head, 10);
+        head = insertAtEnd(head, 20);
+        head = insertAtEnd(head, 30);
+        head = insertAtEnd(head, 40);
+
+        printList(head);
+    }
+}
