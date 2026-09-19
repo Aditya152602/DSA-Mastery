@@ -1,0 +1,182 @@
+import java.util.ArrayList;
+import java.util.Random;
+
+public class MusicPlayer {
+
+    // Node representing one song
+    static class Song {
+
+        String name;
+
+        Song prev;
+        Song next;
+
+        // Constructor
+        Song(String name) {
+            this.name = name;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
+    // Current playing song
+    Song current;
+
+    // Store songs for shuffle
+    ArrayList<Song> songs;
+
+    // Random object
+    Random random;
+
+    // Constructor
+    MusicPlayer() {
+
+        current = null;
+
+        songs = new ArrayList<>();
+
+        random = new Random();
+    }
+
+    // Add a song
+    void addSong(String name) {
+
+        Song newSong = new Song(name);
+
+        // Case 1: Playlist is empty
+        if (current == null) {
+
+            newSong.next = newSong;
+            newSong.prev = newSong;
+
+            current = newSong;
+
+            songs.add(newSong);
+
+            return;
+        }
+
+        // Last song in circular list
+        Song last = current.prev;
+
+        // Connect new song
+        newSong.next = current;
+        newSong.prev = last;
+
+        last.next = newSong;
+        current.prev = newSong;
+
+        // Add to ArrayList
+        songs.add(newSong);
+    }
+
+    // Play current song
+    void play() {
+
+        if (current == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        System.out.println("Playing: " + current.name);
+    }
+
+    // Go to next song
+    void next() {
+
+        if (current == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        current = current.next;
+
+        System.out.println("Next Song: " + current.name);
+    }
+
+    // Go to previous song
+    void prev() {
+
+        if (current == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        current = current.prev;
+
+        System.out.println("Previous Song: " + current.name);
+    }
+
+    // Shuffle playlist
+    void shuffle() {
+
+        if (songs.isEmpty()) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        // Generate random index
+        int index = random.nextInt(songs.size());
+
+        // Select random song
+        current = songs.get(index);
+
+        System.out.println("Shuffle Selected: " + current.name);
+    }
+
+    // Display playlist
+    void displayPlaylist() {
+
+        if (current == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        Song temp = current;
+
+        System.out.println("\nPlaylist:");
+
+        do {
+
+            System.out.println(temp.name);
+
+            temp = temp.next;
+
+        } while (temp != current);
+    }
+
+    public static void main(String[] args) {
+
+        // Create music player
+        MusicPlayer player = new MusicPlayer();
+
+        // Add songs
+        player.addSong("Believer");
+        player.addSong("Perfect");
+        player.addSong("Shape of You");
+        player.addSong("Counting Stars");
+        player.addSong("Faded");
+
+        // Display playlist
+        player.displayPlaylist();
+
+        // Play current song
+        System.out.println();
+        player.play();
+
+        // Next song
+        player.next();
+
+        // Next song
+        player.next();
+
+        // Previous song
+        player.prev();
+
+        // Shuffle
+        player.shuffle();
+
+        // Play shuffled song
+        player.play();
+    }
+}
