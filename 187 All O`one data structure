@@ -1,0 +1,238 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+public class AllOne {
+
+    // Node of Doubly Linked List
+    static class Node {
+
+        int count;
+
+        // All keys having this count
+        Set<String> keys;
+
+        Node prev;
+        Node next;
+
+        Node(int count) {
+            this.count = count;
+            this.keys = new HashSet<>();
+        }
+    }
+
+    // Dummy head and tail
+    Node head;
+    Node tail;
+
+    // key -> DLL node
+    HashMap<String, Node> map;
+
+    // Constructor
+    public AllOne() {
+
+        map = new HashMap<>();
+
+        // Create dummy nodes
+        head = new Node(0);
+        tail = new Node(0);
+
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    // Add a node after a given node
+    private void addNodeAfter(Node newNode, Node previousNode) {
+
+        newNode.next = previousNode.next;
+        newNode.prev = previousNode;
+
+        previousNode.next.prev = newNode;
+        previousNode.next = newNode;
+    }
+
+    // Remove a node from DLL
+    private void removeNode(Node node) {
+
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    // Increase the count of a key
+    public void inc(String key) {
+
+        // Case 1: Key does not exist
+        if (!map.containsKey(key)) {
+
+            Node firstNode = head.next;
+
+            // If count 1 node already exists
+            if (firstNode != tail && firstNode.count == 1) {
+
+                firstNode.keys.add(key);
+
+                map.put(key, firstNode);
+
+            } else {
+
+                // Create count 1 node
+                Node newNode = new Node(1);
+
+                newNode.keys.add(key);
+
+                addNodeAfter(newNode, head);
+
+                map.put(key, newNode);
+            }
+
+            return;
+        }
+
+        // Case 2: Key already exists
+        Node currentNode = map.get(key);
+
+        int newCount = currentNode.count + 1;
+
+        Node nextNode = currentNode.next;
+
+        // Check if next node already has new count
+        if (nextNode != tail && nextNode.count == newCount) {
+
+            nextNode.keys.add(key);
+
+            map.put(key, nextNode);
+
+        } else {
+
+            // Create new node
+            Node newNode = new Node(newCount);
+
+            newNode.keys.add(key);
+
+            addNodeAfter(newNode, currentNode);
+
+            map.put(key, newNode);
+        }
+
+        // Remove key from old node
+        currentNode.keys.remove(key);
+
+        // If old node becomes empty, remove it
+        if (currentNode.keys.isEmpty()) {
+            removeNode(currentNode);
+        }
+    }
+
+    // Decrease the count of a key
+    public void dec(String key) {
+
+        // Key doesn't exist
+        if (!map.containsKey(key)) {
+            return;
+        }
+
+        Node currentNode = map.get(key);
+
+        // If count is 1, remove the key completely
+        if (currentNode.count == 1) {
+
+            map.remove(key);
+
+            currentNode.keys.remove(key);
+
+            if (currentNode.keys.isEmpty()) {
+                removeNode(currentNode);
+            }
+
+            return;
+        }
+
+        // New count
+        int newCount = currentNode.count - 1;
+
+        Node previousNode = currentNode.prev;
+
+        // Check if previous node already has new count
+        if (previousNode != head &&
+            previousNode.count == newCount) {
+
+            previousNode.keys.add(key);
+
+            map.put(key, previousNode);
+
+        } else {
+
+            // Create new node
+            Node newNode = new Node(newCount);
+
+            newNode.keys.add(key);
+
+            addNodeAfter(newNode, previousNode);
+
+            map.put(key, newNode);
+        }
+
+        // Remove key from old node
+        currentNode.keys.remove(key);
+
+        // Remove empty node
+        if (currentNode.keys.isEmpty()) {
+            removeNode(currentNode);
+        }
+    }
+
+    // Return any key with maximum count
+    public String getMaxKey() {
+
+        // No keys
+        if (tail.prev == head) {
+            return "";
+        }
+
+        // Last real node contains maximum count
+        Node maxNode = tail.prev;
+
+        // Return any key from the set
+        return maxNode.keys.iterator().next();
+    }
+
+    // Return any key with minimum count
+    public String getMinKey() {
+
+        // No keys
+        if (head.next == tail) {
+            return "";
+        }
+
+        // First real node contains minimum count
+        Node minNode = head.next;
+
+        return minNode.keys.iterator().next();
+    }
+
+    // Main method
+    public static void main(String[] args) {
+
+        AllOne ds = new AllOne();
+
+        ds.inc("apple");
+        ds.inc("apple");
+        ds.inc("apple");
+
+        ds.inc("banana");
+        ds.inc("banana");
+
+        ds.inc("mango");
+
+        System.out.println("Minimum key: " + ds.getMinKey());
+        System.out.println("Maximum key: " + ds.getMaxKey());
+
+        System.out.println();
+
+        ds.dec("apple");
+
+        System.out.println("After decreasing apple:");
+        System.out.println("Minimum key: " + ds.getMinKey());
+        System.out.println("Maximum key: " + ds.getMaxKey());
+    }
+}
