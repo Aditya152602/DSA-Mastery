@@ -1,0 +1,109 @@
+public class SortedLLToBST {
+
+    // Node of Linked List
+    static class ListNode {
+        int data;
+        ListNode next;
+
+        ListNode(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Node of Binary Search Tree
+    static class TreeNode {
+        int data;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int data) {
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // Find the middle node of the linked list
+    static ListNode findMiddle(ListNode head) {
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    // Convert Sorted Linked List to Balanced BST
+    static TreeNode sortedListToBST(ListNode head) {
+
+        // Base case
+        if (head == null) {
+            return null;
+        }
+
+        // Find middle element
+        ListNode middle = findMiddle(head);
+
+        // Create root using middle element
+        TreeNode root = new TreeNode(middle.data);
+
+        // If only one element exists
+        if (head == middle) {
+            return root;
+        }
+
+        // Find node before middle
+        ListNode temp = head;
+
+        while (temp.next != middle) {
+            temp = temp.next;
+        }
+
+        // Break the linked list
+        temp.next = null;
+
+        // Left half becomes left subtree
+        root.left = sortedListToBST(head);
+
+        // Right half becomes right subtree
+        root.right = sortedListToBST(middle.next);
+
+        return root;
+    }
+
+    // Inorder traversal
+    static void inorder(TreeNode root) {
+
+        if (root == null) {
+            return;
+        }
+
+        inorder(root.left);
+        System.out.print(root.data + " ");
+        inorder(root.right);
+    }
+
+    public static void main(String[] args) {
+
+        // Create sorted linked list
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        head.next.next.next = new ListNode(4);
+        head.next.next.next.next = new ListNode(5);
+        head.next.next.next.next.next = new ListNode(6);
+        head.next.next.next.next.next.next = new ListNode(7);
+
+        // Convert LL to BST
+        TreeNode root = sortedListToBST(head);
+
+        // Inorder traversal of BST
+        System.out.println("Inorder Traversal of BST:");
+        inorder(root);
+    }
+}
