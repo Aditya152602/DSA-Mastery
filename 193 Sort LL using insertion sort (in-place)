@@ -1,0 +1,93 @@
+public class InsertionSortLinkedList {
+
+    // Node of Linked List
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // In-place insertion sort
+    static Node insertionSort(Node head) {
+
+        // If list is empty or has only one node
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // Sorted list initially contains the first node
+        Node sorted = null;
+
+        // Current node that we need to insert
+        Node current = head;
+
+        while (current != null) {
+
+            // Save the next node before changing links
+            Node nextNode = current.next;
+
+            // Insert current into the sorted list
+            if (sorted == null || current.data < sorted.data) {
+
+                // Insert at beginning
+                current.next = sorted;
+                sorted = current;
+
+            } else {
+
+                // Find correct position
+                Node temp = sorted;
+
+                while (temp.next != null &&
+                       temp.next.data <= current.data) {
+
+                    temp = temp.next;
+                }
+
+                // Insert current after temp
+                current.next = temp.next;
+                temp.next = current;
+            }
+
+            // Move to next unsorted node
+            current = nextNode;
+        }
+
+        return sorted;
+    }
+
+    // Display linked list
+    static void display(Node head) {
+
+        Node temp = head;
+
+        while (temp != null) {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        }
+
+        System.out.println("NULL");
+    }
+
+    public static void main(String[] args) {
+
+        // Create linked list
+        Node head = new Node(4);
+        head.next = new Node(2);
+        head.next.next = new Node(1);
+        head.next.next.next = new Node(3);
+
+        System.out.println("Original List:");
+        display(head);
+
+        // Sort the linked list
+        head = insertionSort(head);
+
+        System.out.println("Sorted List:");
+        display(head);
+    }
+}
