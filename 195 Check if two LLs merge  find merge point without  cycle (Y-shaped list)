@@ -1,0 +1,73 @@
+public class MergePoint {
+
+    // Node of Linked List
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Find merge point of two linked lists
+    static Node findMergePoint(Node headA, Node headB) {
+
+        Node p1 = headA;
+        Node p2 = headB;
+
+        while (p1 != p2) {
+
+            // Move p1
+            if (p1 == null) {
+                p1 = headB;
+            } else {
+                p1 = p1.next;
+            }
+
+            // Move p2
+            if (p2 == null) {
+                p2 = headA;
+            } else {
+                p2 = p2.next;
+            }
+        }
+
+        // Either merge node or null
+        return p1;
+    }
+
+    public static void main(String[] args) {
+
+        // Common part
+        Node common1 = new Node(7);
+        Node common2 = new Node(8);
+        Node common3 = new Node(9);
+
+        common1.next = common2;
+        common2.next = common3;
+
+        // List A
+        Node headA = new Node(1);
+        headA.next = new Node(2);
+        headA.next.next = common1;
+
+        // List B
+        Node headB = new Node(3);
+        headB.next = new Node(4);
+        headB.next.next = new Node(5);
+        headB.next.next.next = common1;
+
+        // Find merge point
+        Node mergePoint = findMergePoint(headA, headB);
+
+        if (mergePoint != null) {
+            System.out.println(
+                "Merge point: " + mergePoint.data
+            );
+        } else {
+            System.out.println("Lists do not merge.");
+        }
+    }
+}
