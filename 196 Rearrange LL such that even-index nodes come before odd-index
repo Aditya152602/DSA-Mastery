@@ -1,0 +1,84 @@
+public class EvenIndexFirst {
+
+    // Node of Linked List
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Rearrange even-index nodes before odd-index nodes
+    static Node rearrange(Node head) {
+
+        // Empty list or only one node
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // First even-index node
+        Node evenHead = head.next;
+
+        // Pointer for even-index nodes
+        Node even = evenHead;
+
+        // Pointer for odd-index nodes
+        Node odd = head;
+
+        // Continue while an even node exists
+        while (even != null && even.next != null) {
+
+            // Connect current odd node to next odd node
+            odd.next = even.next;
+            odd = odd.next;
+
+            // Connect current even node to next even node
+            even.next = odd.next;
+            even = even.next;
+        }
+
+        // Connect end of even list to beginning of odd list
+        even.next = head;
+
+        // Terminate the list
+        odd.next = null;
+
+        return evenHead;
+    }
+
+    // Display Linked List
+    static void display(Node head) {
+
+        Node temp = head;
+
+        while (temp != null) {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        }
+
+        System.out.println("NULL");
+    }
+
+    public static void main(String[] args) {
+
+        // Create Linked List
+        Node head = new Node(10);
+        head.next = new Node(20);
+        head.next.next = new Node(30);
+        head.next.next.next = new Node(40);
+        head.next.next.next.next = new Node(50);
+        head.next.next.next.next.next = new Node(60);
+
+        System.out.println("Original List:");
+        display(head);
+
+        // Rearrange
+        head = rearrange(head);
+
+        System.out.println("After Rearranging:");
+        display(head);
+    }
+}
