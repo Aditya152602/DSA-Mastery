@@ -1,0 +1,109 @@
+public class SplitCircularLinkedList {
+
+    // Node of Circular Linked List
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Split circular linked list into two halves
+    static void splitList(Node head, Node[] result) {
+
+        // Empty list
+        if (head == null) {
+            result[0] = null;
+            result[1] = null;
+            return;
+        }
+
+        // Only one node
+        if (head.next == head) {
+            result[0] = head;
+            result[1] = null;
+            return;
+        }
+
+        Node slow = head;
+        Node fast = head;
+
+        // Find middle
+        while (fast.next != head &&
+               fast.next.next != head) {
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // For even number of nodes,
+        // fast should point to the last node.
+        if (fast.next.next == head) {
+            fast = fast.next;
+        }
+
+        // Head of second half
+        Node head2 = slow.next;
+
+        // End first half
+        slow.next = head;
+
+        // End second half
+        fast.next = head2;
+
+        // Store both heads
+        result[0] = head;
+        result[1] = head2;
+    }
+
+    // Display circular linked list
+    static void display(Node head) {
+
+        if (head == null) {
+            System.out.println("Empty");
+            return;
+        }
+
+        Node temp = head;
+
+        do {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        } while (temp != head);
+
+        System.out.println("(back to " + head.data + ")");
+    }
+
+    public static void main(String[] args) {
+
+        // Create circular linked list
+        Node head = new Node(1);
+        Node node2 = new Node(2);
+        Node node3 = new Node(3);
+        Node node4 = new Node(4);
+        Node node5 = new Node(5);
+        Node node6 = new Node(6);
+
+        head.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+        node5.next = node6;
+        node6.next = head; // Make it circular
+
+        // Result array
+        Node[] result = new Node[2];
+
+        // Split
+        splitList(head, result);
+
+        System.out.println("First Half:");
+        display(result[0]);
+
+        System.out.println("Second Half:");
+        display(result[1]);
+    }
+}
