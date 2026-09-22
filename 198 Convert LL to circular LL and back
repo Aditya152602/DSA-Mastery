@@ -1,0 +1,109 @@
+public class LinkedListCircularConversion {
+
+    // Node class
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Convert normal Linked List to Circular Linked List
+    static Node convertToCircular(Node head) {
+
+        // Empty list
+        if (head == null) {
+            return null;
+        }
+
+        Node temp = head;
+
+        // Find the last node
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+
+        // Point last node back to head
+        temp.next = head;
+
+        return head;
+    }
+
+    // Convert Circular Linked List to normal Linked List
+    static Node convertToNormal(Node head) {
+
+        // Empty list
+        if (head == null) {
+            return null;
+        }
+
+        Node temp = head;
+
+        // Find the last node
+        while (temp.next != head) {
+            temp = temp.next;
+        }
+
+        // Break the circular connection
+        temp.next = null;
+
+        return head;
+    }
+
+    // Display normal Linked List
+    static void displayNormal(Node head) {
+
+        Node temp = head;
+
+        while (temp != null) {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        }
+
+        System.out.println("NULL");
+    }
+
+    // Display Circular Linked List
+    static void displayCircular(Node head) {
+
+        if (head == null) {
+            return;
+        }
+
+        Node temp = head;
+
+        do {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        } while (temp != head);
+
+        System.out.println("(back to " + head.data + ")");
+    }
+
+    public static void main(String[] args) {
+
+        // Create normal Linked List
+        Node head = new Node(10);
+        head.next = new Node(20);
+        head.next.next = new Node(30);
+        head.next.next.next = new Node(40);
+
+        System.out.println("Original Linked List:");
+        displayNormal(head);
+
+        // Convert to Circular Linked List
+        head = convertToCircular(head);
+
+        System.out.println("\nAfter converting to Circular Linked List:");
+        displayCircular(head);
+
+        // Convert back to normal Linked List
+        head = convertToNormal(head);
+
+        System.out.println("\nAfter converting back to Normal Linked List:");
+        displayNormal(head);
+    }
+}
