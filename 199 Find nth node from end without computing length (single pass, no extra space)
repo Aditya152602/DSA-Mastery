@@ -1,0 +1,82 @@
+public class NthNodeFromEnd {
+
+    // Node of Linked List
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Find nth node from the end
+    static Node findNthFromEnd(Node head, int n) {
+
+        // Invalid input
+        if (head == null || n <= 0) {
+            return null;
+        }
+
+        Node slow = head;
+        Node fast = head;
+
+        // Move fast n nodes ahead
+        for (int i = 0; i < n; i++) {
+
+            // n is greater than list length
+            if (fast == null) {
+                return null;
+            }
+
+            fast = fast.next;
+        }
+
+        // Move both pointers together
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    // Display linked list
+    static void display(Node head) {
+
+        Node temp = head;
+
+        while (temp != null) {
+            System.out.print(temp.data + " → ");
+            temp = temp.next;
+        }
+
+        System.out.println("NULL");
+    }
+
+    public static void main(String[] args) {
+
+        // Create Linked List
+        Node head = new Node(10);
+        head.next = new Node(20);
+        head.next.next = new Node(30);
+        head.next.next.next = new Node(40);
+        head.next.next.next.next = new Node(50);
+
+        System.out.println("Linked List:");
+        display(head);
+
+        int n = 2;
+
+        Node result = findNthFromEnd(head, n);
+
+        if (result != null) {
+            System.out.println(
+                n + "nd node from end: " + result.data
+            );
+        } else {
+            System.out.println("Invalid n.");
+        }
+    }
+}
