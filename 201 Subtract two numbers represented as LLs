@@ -1,0 +1,176 @@
+public class SubtractTwoNumbersLL {
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // Reverse linked list
+    static Node reverse(Node head) {
+        Node prev = null;
+        Node curr = head;
+
+        while (curr != null) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
+    }
+
+    // Compare two numbers
+    static int compare(Node a, Node b) {
+
+        int lenA = 0;
+        int lenB = 0;
+
+        Node temp = a;
+
+        while (temp != null) {
+            lenA++;
+            temp = temp.next;
+        }
+
+        temp = b;
+
+        while (temp != null) {
+            lenB++;
+            temp = temp.next;
+        }
+
+        if (lenA > lenB)
+            return 1;
+
+        if (lenA < lenB)
+            return -1;
+
+        // Same length: compare digit by digit
+        while (a != null && b != null) {
+
+            if (a.data > b.data)
+                return 1;
+
+            if (a.data < b.data)
+                return -1;
+
+            a = a.next;
+            b = b.next;
+        }
+
+        return 0;
+    }
+
+    // Subtract two numbers
+    static Node subtract(Node a, Node b) {
+
+        // Determine which number is larger
+        int comparison = compare(a, b);
+
+        if (comparison == 0) {
+            return new Node(0);
+        }
+
+        boolean negative = false;
+
+        if (comparison < 0) {
+            Node temp = a;
+            a = b;
+            b = temp;
+
+            negative = true;
+        }
+
+        // Reverse both lists
+        a = reverse(a);
+        b = reverse(b);
+
+        Node dummy = new Node(0);
+        Node tail = dummy;
+
+        int borrow = 0;
+
+        while (a != null) {
+
+            int x = a.data - borrow;
+            int y = (b != null) ? b.data : 0;
+
+            if (x < y) {
+                x += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+
+            int digit = x - y;
+
+            tail.next = new Node(digit);
+            tail = tail.next;
+
+            a = a.next;
+
+            if (b != null)
+                b = b.next;
+        }
+
+        // Reverse result
+        Node result = reverse(dummy.next);
+
+        // Remove leading zeros
+        while (result != null && result.data == 0 && result.next != null) {
+            result = result.next;
+        }
+
+        // If second number was larger, result is negative.
+        // For simplicity, this program prints the sign separately.
+        if (negative) {
+            System.out.print("-");
+        }
+
+        return result;
+    }
+
+    // Print linked list
+    static void print(Node head) {
+
+        while (head != null) {
+            System.out.print(head.data);
+
+            if (head.next != null)
+                System.out.print(" → ");
+
+            head = head.next;
+        }
+
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        // 789
+        Node a = new Node(7);
+        a.next = new Node(8);
+        a.next.next = new Node(9);
+
+        // 456
+        Node b = new Node(4);
+        b.next = new Node(5);
+        b.next.next = new Node(6);
+
+        System.out.print("Number 1: ");
+        print(a);
+
+        System.out.print("Number 2: ");
+        print(b);
+
+        System.out.print("Result: ");
+        Node result = subtract(a, b);
+        print(result);
+    }
+}
