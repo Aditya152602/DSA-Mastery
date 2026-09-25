@@ -1,0 +1,174 @@
+public class LinkedListBloomFilter {
+
+    // Node representing one bit
+    private static class Node {
+        int bit;
+        Node next;
+
+        Node() {
+            this.bit = 0;
+            this.next = null;
+        }
+    }
+
+    private final Node head;
+    private final int size;
+    private final int hashFunctions;
+
+    // Constructor
+    public LinkedListBloomFilter(int size, int hashFunctions) {
+
+        if (size <= 0 || hashFunctions <= 0) {
+            throw new IllegalArgumentException(
+                "Size and hashFunctions must be greater than 0"
+            );
+        }
+
+        this.size = size;
+        this.hashFunctions = hashFunctions;
+
+        // Create linked list of bits
+        head = new Node();
+
+        Node current = head;
+
+        for (int i = 1; i < size; i++) {
+            current.next = new Node();
+            current = current.next;
+        }
+    }
+
+    // ------------------------------------------------
+    // Set a bit at given index
+    // ------------------------------------------------
+    private void setBit(int index) {
+
+        Node current = head;
+
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+
+        current.bit = 1;
+    }
+
+    // ------------------------------------------------
+    // Get bit at given index
+    // ------------------------------------------------
+    private int getBit(int index) {
+
+        Node current = head;
+
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+
+        return current.bit;
+    }
+
+    // ------------------------------------------------
+    // Hash function
+    // ------------------------------------------------
+    private int hash(String value, int seed) {
+
+        long hash = seed;
+
+        for (int i = 0; i < value.length(); i++) {
+
+            hash = hash * 31 + value.charAt(i);
+
+            hash ^= (hash >>> 13);
+        }
+
+        // Convert to positive index
+        hash = hash & Long.MAX_VALUE;
+
+        return (int) (hash % size);
+    }
+
+    // ------------------------------------------------
+    // Add element
+    // ------------------------------------------------
+    public void add(String value) {
+
+        if (value == null) {
+            throw new IllegalArgumentException("Value cannot be null");
+        }
+
+        for (int i = 0; i < hashFunctions; i++) {
+
+            int index = hash(value, i + 1);
+
+            setBit(index);
+        }
+    }
+
+    // ------------------------------------------------
+    // Check whether element might exist
+    // ------------------------------------------------
+    public boolean mightContain(String value) {
+
+        if (value == null) {
+            return false;
+        }
+
+        for (int i = 0; i < hashFunctions; i++) {
+
+            int index = hash(value, i + 1);
+
+            if (getBit(index) == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // ------------------------------------------------
+    // Display bits
+    // ------------------------------------------------
+    public void display() {
+
+        Node current = head;
+
+        while (current != null) {
+            System.out.print(current.bit + " ");
+            current = current.next;
+        }
+
+        System.out.println();
+    }
+
+    // ------------------------------------------------
+    // Main
+    // ------------------------------------------------
+    public static void main(String[] args) {
+
+        LinkedListBloomFilter filter =
+            new LinkedListBloomFilter(20, 3);
+
+        filter.add("Rahul");
+        filter.add("Aditya");
+        filter.add("Aman");
+
+        System.out.println("Bloom Filter bits:");
+        filter.display();
+
+        System.out.println();
+
+        System.out.println(
+            "Aditya: " +
+            filter.mightContain("Aditya")
+        );
+
+        System.out.println(
+            "Rahul: " +
+            filter.mightContain("Rahul")
+        );
+
+        System.out.println(
+            "Rohit: " +
+            filter.mightContain("Rohit")
+        );
+    }
+}
