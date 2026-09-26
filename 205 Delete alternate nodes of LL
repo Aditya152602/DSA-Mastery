@@ -1,0 +1,49 @@
+class Node {
+    int data;
+    Node next;
+    Node(int val) { data = val; }
+}
+
+class LinkedListOps {
+
+    // Deletes alternate nodes starting from the 2nd node
+    static void deleteAlternate(Node head) {
+        if (head == null) return;
+
+        Node curr = head;
+        while (curr != null && curr.next != null) {
+            Node toDelete = curr.next;   // node to remove
+            curr.next = toDelete.next;   // bypass it
+            toDelete.next = null;        // help GC / avoid dangling ref
+            curr = curr.next;            // move to next "keep" node
+        }
+    }
+
+    static void printList(Node head) {
+        for (Node t = head; t != null; t = t.next)
+            System.out.print(t.data + " ");
+        System.out.println();
+    }
+
+    static Node build(int[] vals) {
+        Node head = null, tail = null;
+        for (int v : vals) {
+            Node n = new Node(v);
+            if (head == null) head = tail = n;
+            else { tail.next = n; tail = n; }
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        Node head = build(new int[]{1, 2, 3, 4, 5, 6, 7});
+
+        System.out.print("Original: ");
+        printList(head);
+
+        deleteAlternate(head);
+
+        System.out.print("After deleting alternates: ");
+        printList(head);
+    }
+}
