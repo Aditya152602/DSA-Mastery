@@ -1,0 +1,82 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+    Node(int val) { data = val; }
+}
+
+class LinkedListSetOps {
+
+    // Helper: append a value to the result list
+    static Node[] push(Node head, Node tail, int val) {
+        Node n = new Node(val);
+        if (head == null) head = tail = n;
+        else { tail.next = n; tail = n; }
+        return new Node[]{head, tail};
+    }
+
+    // Union of two linked lists
+    static Node getUnion(Node head1, Node head2) {
+        Set<Integer> seen = new HashSet<>();
+        Node resHead = null, resTail = null;
+
+        for (Node t = head1; t != null; t = t.next) {
+            if (seen.add(t.data)) {          // true if newly added
+                Node[] r = push(resHead, resTail, t.data);
+                resHead = r[0]; resTail = r[1];
+            }
+        }
+        for (Node t = head2; t != null; t = t.next) {
+            if (seen.add(t.data)) {
+                Node[] r = push(resHead, resTail, t.data);
+                resHead = r[0]; resTail = r[1];
+            }
+        }
+        return resHead;
+    }
+
+    // Intersection of two linked lists
+    static Node getIntersection(Node head1, Node head2) {
+        Set<Integer> set1 = new HashSet<>();
+        for (Node t = head1; t != null; t = t.next)
+            set1.add(t.data);
+
+        Set<Integer> added = new HashSet<>();   // avoid duplicate matches
+        Node resHead = null, resTail = null;
+
+        for (Node t = head2; t != null; t = t.next) {
+            if (set1.contains(t.data) && added.add(t.data)) {
+                Node[] r = push(resHead, resTail, t.data);
+                resHead = r[0]; resTail = r[1];
+            }
+        }
+        return resHead;
+    }
+
+    static void printList(Node head) {
+        for (Node t = head; t != null; t = t.next)
+            System.out.print(t.data + " ");
+        System.out.println();
+    }
+
+    static Node build(int[] vals) {
+        Node head = null, tail = null;
+        for (int v : vals) {
+            Node[] r = push(head, tail, v);
+            head = r[0]; tail = r[1];
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        Node h1 = build(new int[]{10, 15, 4, 20});
+        Node h2 = build(new int[]{8, 4, 2, 10});
+
+        System.out.print("Union: ");
+        printList(getUnion(h1, h2));
+
+        System.out.print("Intersection: ");
+        printList(getIntersection(h1, h2));
+    }
+}
