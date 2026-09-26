@@ -1,0 +1,47 @@
+class Node {
+    int data;
+    Node next;
+    Node(int val) { data = val; }
+}
+
+class LinkedListOps {
+
+    // Returns length of the loop, or 0 if there's no loop
+    static int countLoopLength(Node head) {
+        Node slow = head, fast = head;
+
+        // Step 1: detect if a loop exists (Floyd's algorithm)
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                // Step 2: loop found — measure its length
+                return measureLoop(slow);
+            }
+        }
+        return 0;   // no loop
+    }
+
+    // slow == fast here, both somewhere inside the loop
+    private static int measureLoop(Node meetingPoint) {
+        int count = 1;
+        Node temp = meetingPoint.next;
+        while (temp != meetingPoint) {
+            count++;
+            temp = temp.next;
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        // Build list: 1 -> 2 -> 3 -> 4 -> 5 -> 3 (loop back to node with value 3)
+        Node head = new Node(1);
+        head.next = new Node(2);
+        head.next.next = new Node(3);
+        head.next.next.next = new Node(4);
+        head.next.next.next.next = new Node(5);
+        head.next.next.next.next.next = head.next.next; // 5 -> 3 (loop)
+
+        System.out.println("Loop length: " + countLoopLength(head));
+    }
+}
