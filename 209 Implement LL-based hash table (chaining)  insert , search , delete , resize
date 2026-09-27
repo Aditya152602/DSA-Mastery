@@ -1,0 +1,124 @@
+class HashNode<K, V> {
+    K key;
+    V value;
+    HashNode<K, V> next;
+    HashNode(K key, V value) { this.key = key; this.value = value; }
+}
+
+class MyHashMap<K, V> {
+    private HashNode<K, V>[] buckets;
+    private int size;               // number of key-value pairs stored
+    private int capacity;           // number of buckets (kept a power of 2)
+    private static final double LOAD_FACTOR_THRESHOLD = 0.75;
+    private static final int DEFAULT_CAPACITY = 16;
+
+    @SuppressWarnings("unchecked")
+    MyHashMap() {
+        capacity = DEFAULT_CAPACITY;
+        buckets = new HashNode[capacity];
+        size = 0;
+    }
+
+    // Mix hashCode bits to reduce clustering, then map to bucket index
+    private int bucketIndex(K key, int cap) {
+        int h = (key == null) ? 0 : key.hashCode();
+        h ^= (h >>> 16);            // spread high bits into low bits
+        return h & (cap - 1);       // equivalent to h % cap since cap is power of 2
+    }
+
+    // ---------- INSERT ----------
+    void insert(K key, V value) {
+        int idx = bucketIndex(key, capacity);
+        HashNode<K, V> head = buckets[idx];
+
+        // check if key already exists -> update value
+        for (HashNode<K, V> t = head; t != null; t = t.next) {
+            if (keysEqual(t.key, key)) {
+                t.value = value;
+                return;
+            }
+        }
+
+        // key not found -> prepend new node (O(1))
+        HashNode<K, V> newNode = new HashNode<>(key, value);
+        newNode.next = head;
+        buckets[idx] = newNode;
+        size++;
+
+        if ((double) size / capacity > LOAD_FACTOR_THRESHOLD) {
+            resize();
+        }
+    }
+
+    // ---------- SEARCH ----------
+    V search(K key) {
+        int idx = bucketIndex(key, capacity);
+        for (HashNode<K, V> t = buckets[idx]; t != null; t = t.next) {
+            if (keysEqual(t.key, key)) return t.value;
+        }
+        return null;   // not found
+    }
+
+    boolean contains(K key) {
+        int idx = bucketIndex(key, capacity);
+        for (HashNode<K, V> t = buckets[idx]; t != null; t = t.next)
+            if (keysEqual(t.key, key)) return true;
+        return false;
+    }
+
+    // ---------- DELETE ----------
+    V delete(K key) {
+        int idx = bucketIndex(key, capacity);
+        HashNode<K, V> curr = buckets[idx], prev = null;
+
+        while (curr != null) {
+            if (keysEqual(curr.key, key)) {
+                if (prev == null) buckets[idx] = curr.next;   // removing head
+                else prev.next = curr.next;                    // removing mid/tail
+                size--;
+                return curr.value;
+            }
+            prev = curr;
+            curr = curr.next;
+        }
+        return null;   // key not found
+    }
+
+    // ---------- RESIZE ----------
+    @SuppressWarnings("unchecked")
+    private void resize() {
+        int newCapacity = capacity * 2;
+        HashNode<K, V>[] newBuckets = new HashNode[newCapacity];
+
+        // rehash every existing node into the new bucket array
+        for (int i = 0; i < capacity; i++) {
+            HashNode<K, V> t = buckets[i];
+            while (t != null) {
+                HashNode<K, V> nextNode = t.next;   // save before relinking
+                int newIdx = bucketIndex(t.key, newCapacity);
+                t.next = newBuckets[newIdx];        // prepend into new bucket
+                newBuckets[newIdx] = t;
+                t = nextNode;
+            }
+        }
+
+        buckets = newBuckets;
+        capacity = newCapacity;
+    }
+
+    private boolean keysEqual(K a, K b) {
+        return (a == null && b == null) || (a != null && a.equals(b));
+    }
+
+    int size() { return size; }
+    int capacity() { return capacity; }
+
+    void printTable() {
+        for (int i = 0; i < capacity; i++) {
+            System.out.print("[" + i + "]: ");
+            for (HashNode<K, V> t = buckets[i]; t != null; t = t.next)
+                System.out.print(t.key + "=" + t.value + " -> ");
+            System.out.println("null");
+        }
+    }
+}
