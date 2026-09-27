@@ -1,0 +1,71 @@
+class Node {
+    int data;
+    Node next;
+    Node(int val) { data = val; }
+}
+
+class LinkedListOps {
+
+    // Reverses alternate blocks of K nodes: reverse K, skip K, reverse K, skip K, ...
+    static Node reverseAlternateK(Node head, int k) {
+        if (head == null) return null;
+
+        // ---- Step 1: reverse first k nodes (or fewer, if list ends early) ----
+        Node curr = head, prev = null;
+        int count = 0;
+        while (curr != null && count < k) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            count++;
+        }
+
+        // head is now the TAIL of this reversed block.
+        // curr points to the first node of the "skip" block (or null if list ended).
+
+        // ---- Step 2: skip next k nodes (leave them as-is) ----
+        // head.next temporarily bridges to the skip-block; we'll fix it below.
+        head.next = curr;
+        count = 0;
+        while (curr != null && count < k - 1) {
+            curr = curr.next;
+            count++;
+        }
+
+        // ---- Step 3: recurse on the rest, and attach after the skipped block ----
+        if (curr != null) {
+            curr.next = reverseAlternateK(curr.next, k);
+        }
+
+        return prev;   // new head of this reversed block
+    }
+
+    static void printList(Node head) {
+        for (Node t = head; t != null; t = t.next)
+            System.out.print(t.data + " -> ");
+        System.out.println("null");
+    }
+
+    static Node build(int[] vals) {
+        Node head = null, tail = null;
+        for (int v : vals) {
+            Node n = new Node(v);
+            if (head == null) head = tail = n;
+            else { tail.next = n; tail = n; }
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        Node head = build(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+
+        System.out.print("Original: ");
+        printList(head);
+
+        head = reverseAlternateK(head, 3);
+
+        System.out.print("After reverseAlternateK(k=3): ");
+        printList(head);
+    }
+}
