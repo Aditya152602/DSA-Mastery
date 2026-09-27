@@ -1,0 +1,63 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+    Node(int val) { data = val; }
+}
+
+class LinkedListOps {
+
+    static boolean isKPalindrome(Node head, int k) {
+        // Step 1: copy list into array
+        List<Integer> list = new ArrayList<>();
+        for (Node t = head; t != null; t = t.next) list.add(t.data);
+        int n = list.size();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) arr[i] = list.get(i);
+
+        // Step 2: min removals = n - LPS length
+        int lps = longestPalinSubseq(arr);
+        int minRemovals = n - lps;
+
+        return minRemovals <= k;
+    }
+
+    // Standard interval DP for Longest Palindromic Subsequence
+    static int longestPalinSubseq(int[] arr) {
+        int n = arr.length;
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) dp[i][i] = 1;
+
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                int j = i + len - 1;
+                if (arr[i] == arr[j]) {
+                    dp[i][j] = (len == 2) ? 2 : dp[i + 1][j - 1] + 2;
+                } else {
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[0][n - 1];
+    }
+
+    static Node build(int[] vals) {
+        Node head = null, tail = null;
+        for (int v : vals) {
+            Node n = new Node(v);
+            if (head == null) head = tail = n;
+            else { tail.next = n; tail = n; }
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        // List: 1 2 3 4 5 2 1  -> min removals needed = 2 (LPS = "1 2 5 2 1")
+        Node head = build(new int[]{1, 2, 3, 4, 5, 2, 1});
+
+        System.out.println("k=1: " + isKPalindrome(head, 1)); // false (needs 2 removals)
+        System.out.println("k=2: " + isKPalindrome(head, 2)); // true
+        System.out.println("k=3: " + isKPalindrome(head, 3)); // true
+    }
+}
