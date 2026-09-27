@@ -1,0 +1,71 @@
+class HNode<T> {
+    T state;
+    HNode<T> prev, next;
+    HNode(T state) { this.state = state; }
+}
+
+class UndoRedoStack<T> {
+    private HNode<T> head;      // oldest state (evicted first if capacity exceeded)
+    private HNode<T> tail;      // newest state ever pushed (end of redo chain)
+    private HNode<T> current;   // state the user is currently viewing
+    private int size;
+    private final int capacity; // max history length; 0 = unbounded
+
+    UndoRedoStack() { this(0); }
+    UndoRedoStack(int capacity) { this.capacity = capacity; }
+
+    // Record a new action/state. Discards any "redo" history beyond current.
+    void execute(T state) {
+        HNode<T> node = new HNode<>(state);
+
+        if (current == null) {
+            head = tail = current = node;
+            size = 1;
+        } else {
+            // cut off everything after current (the old redo branch)
+            current.next = node;
+            node.prev = current;
+            tail = node;
+            current = node;
+
+            // recompute size: count back from tail to head is O(n),
+            // so instead we track size incrementally and just trim on overflow
+            size++;
+        }
+
+        if (capacity > 0 && size > capacity) {
+            head = head.next;   // evict oldest
+            if (head != null) head.prev = null;
+            size--;
+        }
+    }
+
+    // Move current back one step; returns the state now being viewed, or null if none
+    T undo() {
+        if (!canUndo()) return null;
+        current = current.prev;
+        return current.state;
+    }
+
+    // Move current forward one step; returns the state now being viewed, or null if none
+    T redo() {
+        if (!canRedo()) return null;
+        current = current.next;
+        return current.state;
+    }
+
+    T peek() { return current == null ? null : current.state; }
+
+    boolean canUndo() { return current != null && current.prev != null; }
+    boolean canRedo() { return current != null && current.next != null; }
+
+    // For debugging: print the full history with current marked
+    void printHistory() {
+        StringBuilder sb = new StringBuilder();
+        for (HNode<T> t = head; t != null; t = t.next) {
+            if (t == current) sb.append("[").append(t.state).append("] ");
+            else sb.append(t.state).append(" ");
+        }
+        System.out.println(sb.toString().trim());
+    }
+}
