@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+class Stack {
+
+    int[] stack;
+    int top;
+    int size;
+
+    // Constructor
+    Stack(int size) {
+        this.size = size;
+        stack = new int[size];
+        top = -1;
+    }
+
+    // Push
+    void push(int value) {
+        if (top == size - 1) {
+            System.out.println("Stack Overflow!");
+            return;
+        }
+
+        stack[++top] = value;
+        System.out.println(value + " pushed into stack.");
+    }
+
+    // Pop
+    int pop() {
+        // Check Stack Underflow
+        if (top == -1) {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+
+        int value = stack[top];
+        top--;
+
+        return value;
+    }
+
+    // Peek
+    int peek() {
+        if (top == -1) {
+            System.out.println("Stack is Empty!");
+            return -1;
+        }
+
+        return stack[top];
+    }
+
+    // Display
+    void display() {
+        if (top == -1) {
+            System.out.println("Stack is Empty!");
+            return;
+        }
+
+        System.out.println("Stack elements:");
+
+        for (int i = top; i >= 0; i--) {
+            System.out.println(stack[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        Stack s = new Stack(5);
+
+        // Push elements
+        s.push(10);
+        s.push(20);
+        s.push(30);
+        s.push(40);
+
+        System.out.println("\nBefore Pop:");
+        s.display();
+
+        // Pop element
+        int removed = s.pop();
+
+        System.out.println("\nPopped element: " + removed);
+
+        System.out.println("\nAfter Pop:");
+        s.display();
+
+        System.out.println("\nTop element: " + s.peek());
+
+        sc.close();
+    }
+}
