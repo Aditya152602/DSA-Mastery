@@ -1,0 +1,88 @@
+import java.util.Scanner;
+
+class Stack {
+
+    int[] stack;
+    int top;
+    int size;
+
+    // Constructor
+    Stack(int size) {
+        this.size = size;
+        stack = new int[size];
+        top = -1;
+    }
+
+    // Push element
+    void push(int value) {
+        if (top == size - 1) {
+            System.out.println("Stack Overflow!");
+            return;
+        }
+
+        stack[++top] = value;
+        System.out.println(value + " pushed into stack.");
+    }
+
+    // Pop element
+    int pop() {
+        if (top == -1) {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+
+        int value = stack[top];
+        top--;
+
+        return value;
+    }
+
+    // Find Top Element
+    int peek() {
+        if (top == -1) {
+            System.out.println("Stack is Empty!");
+            return -1;
+        }
+
+        return stack[top];
+    }
+
+    // Display stack
+    void display() {
+        if (top == -1) {
+            System.out.println("Stack is Empty!");
+            return;
+        }
+
+        System.out.println("Stack elements:");
+
+        for (int i = top; i >= 0; i--) {
+            System.out.println(stack[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        Stack s = new Stack(5);
+
+        // Push elements
+        s.push(10);
+        s.push(20);
+        s.push(30);
+        s.push(40);
+
+        System.out.println("\nStack:");
+        s.display();
+
+        // Find top element
+        System.out.println("\nTop element: " + s.peek());
+
+        // Check again after peek
+        System.out.println("\nStack after Peek:");
+        s.display();
+
+        sc.close();
+    }
+}
