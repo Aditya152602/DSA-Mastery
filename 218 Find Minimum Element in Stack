@@ -1,0 +1,42 @@
+import java.util.Stack;
+
+public class MinimumElementStack {
+
+    static int findMinimum(Stack<Integer> stack) {
+
+        // Check if stack is empty
+        if (stack.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+
+        int minimum = stack.peek();
+
+        // Traverse the stack
+        for (int element : stack) {
+            if (element < minimum) {
+                minimum = element;
+            }
+        }
+
+        return minimum;
+    }
+
+    public static void main(String[] args) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        // Push elements
+        stack.push(40);
+        stack.push(10);
+        stack.push(50);
+        stack.push(20);
+        stack.push(30);
+
+        System.out.println("Stack: " + stack);
+
+        // Find minimum element
+        int minimum = findMinimum(stack);
+
+        System.out.println("Minimum Element: " + minimum);
+    }
+}
