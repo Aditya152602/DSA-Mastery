@@ -1,0 +1,59 @@
+import java.util.Stack;
+
+public class ReverseStack {
+
+    // Function to insert an element at the bottom of the stack
+    static void insertAtBottom(Stack<Integer> stack, int value) {
+
+        // If stack is empty, push the value
+        if (stack.isEmpty()) {
+            stack.push(value);
+            return;
+        }
+
+        // Remove the top element
+        int top = stack.pop();
+
+        // Recursively insert value at bottom
+        insertAtBottom(stack, value);
+
+        // Put the removed element back
+        stack.push(top);
+    }
+
+    // Function to reverse the stack
+    static void reverse(Stack<Integer> stack) {
+
+        // Base condition
+        if (stack.isEmpty()) {
+            return;
+        }
+
+        // Remove the top element
+        int top = stack.pop();
+
+        // Reverse the remaining stack
+        reverse(stack);
+
+        // Insert removed element at the bottom
+        insertAtBottom(stack, top);
+    }
+
+    public static void main(String[] args) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        // Push elements
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        stack.push(4);
+
+        System.out.println("Original Stack: " + stack);
+
+        // Reverse the stack
+        reverse(stack);
+
+        System.out.println("Reversed Stack: " + stack);
+    }
+}
