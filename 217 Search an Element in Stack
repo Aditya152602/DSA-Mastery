@@ -1,0 +1,31 @@
+import java.util.Stack;
+
+public class SearchElementInStack {
+
+    public static void main(String[] args) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        // Push elements into the stack
+        stack.push(10);
+        stack.push(20);
+        stack.push(30);
+        stack.push(40);
+        stack.push(50);
+
+        System.out.println("Stack: " + stack);
+
+        // Element to search
+        int element = 30;
+
+        // Search the element
+        int position = stack.search(element);
+
+        if (position != -1) {
+            System.out.println("Element " + element + " found.");
+            System.out.println("Position from Top: " + position);
+        } else {
+            System.out.println("Element " + element + " not found.");
+        }
+    }
+}
