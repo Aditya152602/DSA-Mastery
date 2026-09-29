@@ -1,0 +1,103 @@
+public class QueueUsingArray {
+
+    int[] queue;
+    int front;
+    int rear;
+    int size;
+
+    // Constructor
+    QueueUsingArray(int size) {
+        this.size = size;
+        queue = new int[size];
+        front = -1;
+        rear = -1;
+    }
+
+    // Add an element to the queue
+    void enqueue(int value) {
+
+        // Check if queue is full
+        if (rear == size - 1) {
+            System.out.println("Queue is Full");
+            return;
+        }
+
+        // First element
+        if (front == -1) {
+            front = 0;
+        }
+
+        rear++;
+        queue[rear] = value;
+
+        System.out.println(value + " inserted into queue.");
+    }
+
+    // Remove an element from the queue
+    void dequeue() {
+
+        // Check if queue is empty
+        if (front == -1 || front > rear) {
+            System.out.println("Queue is Empty");
+            return;
+        }
+
+        System.out.println(queue[front] + " removed from queue.");
+        front++;
+
+        // Reset queue when it becomes empty
+        if (front > rear) {
+            front = -1;
+            rear = -1;
+        }
+    }
+
+    // Get the front element
+    void peek() {
+
+        if (front == -1 || front > rear) {
+            System.out.println("Queue is Empty");
+            return;
+        }
+
+        System.out.println("Front Element: " + queue[front]);
+    }
+
+    // Display queue elements
+    void display() {
+
+        if (front == -1 || front > rear) {
+            System.out.println("Queue is Empty");
+            return;
+        }
+
+        System.out.print("Queue: ");
+
+        for (int i = front; i <= rear; i++) {
+            System.out.print(queue[i] + " ");
+        }
+
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        QueueUsingArray q = new QueueUsingArray(5);
+
+        q.enqueue(10);
+        q.enqueue(20);
+        q.enqueue(30);
+        q.enqueue(40);
+
+        q.display();
+
+        q.peek();
+
+        q.dequeue();
+        q.dequeue();
+
+        q.display();
+
+        q.peek();
+    }
+}
