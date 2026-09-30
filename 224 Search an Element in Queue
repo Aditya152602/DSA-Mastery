@@ -1,0 +1,39 @@
+import java.util.*;
+
+public class Main {
+
+    // Method to search an element
+    static boolean searchElement(Queue<Integer> queue, int target) {
+
+        for (int element : queue) {
+            if (element == target) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Add elements to Queue
+        queue.add(10);
+        queue.add(20);
+        queue.add(30);
+        queue.add(40);
+        queue.add(50);
+
+        System.out.println("Queue: " + queue);
+
+        int target = 30;
+
+        // Search element
+        if (searchElement(queue, target)) {
+            System.out.println(target + " is present in the Queue.");
+        } else {
+            System.out.println(target + " is not present in the Queue.");
+        }
+    }
+}
