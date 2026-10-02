@@ -1,0 +1,92 @@
+import java.util.Stack;
+
+public class QueueUsingTwoStacks {
+
+    Stack<Integer> stack1 = new Stack<>();
+    Stack<Integer> stack2 = new Stack<>();
+
+    // Add element to Queue
+    void enqueue(int x) {
+        stack1.push(x);
+        System.out.println(x + " inserted into Queue");
+    }
+
+    // Remove element from Queue
+    int dequeue() {
+
+        if (stack1.isEmpty() && stack2.isEmpty()) {
+            System.out.println("Queue is Empty");
+            return -1;
+        }
+
+        // Transfer elements only when stack2 is empty
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+
+        return stack2.pop();
+    }
+
+    // Return front element
+    int front() {
+
+        if (stack1.isEmpty() && stack2.isEmpty()) {
+            System.out.println("Queue is Empty");
+            return -1;
+        }
+
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+
+        return stack2.peek();
+    }
+
+    // Check if Queue is empty
+    boolean isEmpty() {
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+
+    // Display Queue
+    void display() {
+
+        if (isEmpty()) {
+            System.out.println("Queue is Empty");
+            return;
+        }
+
+        // Move elements from stack1 to stack2 if necessary
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+
+        System.out.println("Queue: " + stack2);
+    }
+
+    public static void main(String[] args) {
+
+        QueueUsingTwoStacks queue = new QueueUsingTwoStacks();
+
+        queue.enqueue(10);
+        queue.enqueue(20);
+        queue.enqueue(30);
+        queue.enqueue(40);
+
+        queue.display();
+
+        System.out.println("Front element: " + queue.front());
+
+        System.out.println("Deleted: " + queue.dequeue());
+        System.out.println("Deleted: " + queue.dequeue());
+
+        queue.display();
+
+        System.out.println("Front element: " + queue.front());
+    }
+}
