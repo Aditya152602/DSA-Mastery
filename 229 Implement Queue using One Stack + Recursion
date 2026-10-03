@@ -1,0 +1,70 @@
+import java.util.Stack;
+
+public class QueueUsingOneStack {
+
+    static Stack<Integer> stack = new Stack<>();
+
+    // Enqueue operation
+    static void enqueue(int data) {
+        stack.push(data);
+        System.out.println(data + " inserted into queue.");
+    }
+
+    // Dequeue operation using recursion
+    static int dequeue() {
+
+        // Queue is empty
+        if (stack.isEmpty()) {
+            System.out.println("Queue is empty.");
+            return -1;
+        }
+
+        // Remove the top element
+        int x = stack.pop();
+
+        // If this is the last element, it is the front of queue
+        if (stack.isEmpty()) {
+            return x;
+        }
+
+        // Recursively find the bottom element
+        int result = dequeue();
+
+        // Put the removed element back
+        stack.push(x);
+
+        return result;
+    }
+
+    // Display queue
+    static void display() {
+        if (stack.isEmpty()) {
+            System.out.println("Queue is empty.");
+            return;
+        }
+
+        System.out.println("Queue elements: " + stack);
+    }
+
+    public static void main(String[] args) {
+
+        enqueue(10);
+        enqueue(20);
+        enqueue(30);
+        enqueue(40);
+
+        display();
+
+        System.out.println("Removed: " + dequeue());
+        display();
+
+        System.out.println("Removed: " + dequeue());
+        display();
+
+        enqueue(50);
+        display();
+
+        System.out.println("Removed: " + dequeue());
+        display();
+    }
+}
