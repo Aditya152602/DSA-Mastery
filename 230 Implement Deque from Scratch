@@ -1,0 +1,145 @@
+public class Deque {
+
+    private int[] deque;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+
+    // Constructor
+    public Deque(int capacity) {
+        this.capacity = capacity;
+        deque = new int[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    // Check if deque is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Check if deque is full
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    // Insert element at front
+    public void addFront(int value) {
+        if (isFull()) {
+            System.out.println("Deque is Full");
+            return;
+        }
+
+        front = (front - 1 + capacity) % capacity;
+        deque[front] = value;
+        size++;
+
+        System.out.println(value + " inserted at front.");
+    }
+
+    // Insert element at rear
+    public void addRear(int value) {
+        if (isFull()) {
+            System.out.println("Deque is Full");
+            return;
+        }
+
+        rear = (rear + 1) % capacity;
+        deque[rear] = value;
+        size++;
+
+        System.out.println(value + " inserted at rear.");
+    }
+
+    // Delete element from front
+    public int removeFront() {
+        if (isEmpty()) {
+            System.out.println("Deque is Empty");
+            return -1;
+        }
+
+        int value = deque[front];
+        front = (front + 1) % capacity;
+        size--;
+
+        return value;
+    }
+
+    // Delete element from rear
+    public int removeRear() {
+        if (isEmpty()) {
+            System.out.println("Deque is Empty");
+            return -1;
+        }
+
+        int value = deque[rear];
+        rear = (rear - 1 + capacity) % capacity;
+        size--;
+
+        return value;
+    }
+
+    // Get front element
+    public int getFront() {
+        if (isEmpty()) {
+            System.out.println("Deque is Empty");
+            return -1;
+        }
+
+        return deque[front];
+    }
+
+    // Get rear element
+    public int getRear() {
+        if (isEmpty()) {
+            System.out.println("Deque is Empty");
+            return -1;
+        }
+
+        return deque[rear];
+    }
+
+    // Display deque
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Deque is Empty");
+            return;
+        }
+
+        System.out.print("Deque: ");
+
+        for (int i = 0; i < size; i++) {
+            int index = (front + i) % capacity;
+            System.out.print(deque[index] + " ");
+        }
+
+        System.out.println();
+    }
+
+    // Main method
+    public static void main(String[] args) {
+
+        Deque dq = new Deque(5);
+
+        dq.addRear(10);
+        dq.addRear(20);
+        dq.addRear(30);
+
+        dq.display();
+
+        dq.addFront(5);
+        dq.addFront(1);
+
+        dq.display();
+
+        System.out.println("Front Element: " + dq.getFront());
+        System.out.println("Rear Element: " + dq.getRear());
+
+        System.out.println("Removed from Front: " + dq.removeFront());
+        System.out.println("Removed from Rear: " + dq.removeRear());
+
+        dq.display();
+    }
+}
