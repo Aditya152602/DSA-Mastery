@@ -1,0 +1,48 @@
+import java.util.Stack;
+
+public class RemoveAdjacentDuplicates {
+
+    public static String removeDuplicates(String s) {
+
+        // Create a stack to store characters
+        Stack<Character> stack = new Stack<>();
+
+        // Traverse the string
+        for (char ch : s.toCharArray()) {
+
+            // If stack is not empty and top is same as current character
+            if (!stack.isEmpty() && stack.peek() == ch) {
+
+                // Remove the duplicate character
+                stack.pop();
+
+            } else {
+
+                // Otherwise, add the character to the stack
+                stack.push(ch);
+            }
+        }
+
+        // Create StringBuilder for the result
+        StringBuilder result = new StringBuilder();
+
+        // Store stack characters in the result
+        for (char ch : stack) {
+            result.append(ch);
+        }
+
+        // Return the final string
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+
+        // Input string
+        String s = "abbaca";
+
+        // Call the method and print the result
+        System.out.println("Original String: " + s);
+        System.out.println("After Removing Duplicates: "
+                + removeDuplicates(s));
+    }
+}
