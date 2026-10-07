@@ -1,0 +1,45 @@
+import java.util.Stack;
+
+public class ReverseStringUsingStack {
+
+    public static String reverseString(String str) {
+
+        // Create a stack to store characters
+        Stack<Character> stack = new Stack<>();
+
+        // Traverse the string character by character
+        for (char ch : str.toCharArray()) {
+
+            // Push each character into the stack
+            stack.push(ch);
+        }
+
+        // Create StringBuilder to store the reversed string
+        StringBuilder reversed = new StringBuilder();
+
+        // Pop characters from the stack
+        while (!stack.isEmpty()) {
+
+            // Add the top character to the result
+            reversed.append(stack.pop());
+        }
+
+        // Return the reversed string
+        return reversed.toString();
+    }
+
+    public static void main(String[] args) {
+
+        // Input string
+        String str = "HELLO";
+
+        // Reverse the string
+        String result = reverseString(str);
+
+        // Display the original string
+        System.out.println("Original String: " + str);
+
+        // Display the reversed string
+        System.out.println("Reversed String: " + result);
+    }
+}
