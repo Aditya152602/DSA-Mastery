@@ -1,0 +1,100 @@
+import java.util.Stack;
+
+public class InfixToPostfix {
+
+    // Function to return operator precedence
+    static int precedence(char ch) {
+
+        if (ch == '^') {
+            return 3;
+        }
+
+        if (ch == '*' || ch == '/' || ch == '%') {
+            return 2;
+        }
+
+        if (ch == '+' || ch == '-') {
+            return 1;
+        }
+
+        return -1;
+    }
+
+    // Function to convert infix to postfix
+    static String infixToPostfix(String infix) {
+
+        // Create a stack for operators
+        Stack<Character> stack = new Stack<>();
+
+        // Store the postfix expression
+        StringBuilder postfix = new StringBuilder();
+
+        // Traverse the infix expression
+        for (int i = 0; i < infix.length(); i++) {
+
+            char ch = infix.charAt(i);
+
+            // If character is an operand
+            if (Character.isLetterOrDigit(ch)) {
+
+                // Add operand directly to postfix
+                postfix.append(ch);
+            }
+
+            // If opening parenthesis
+            else if (ch == '(') {
+
+                // Push it into stack
+                stack.push(ch);
+            }
+
+            // If closing parenthesis
+            else if (ch == ')') {
+
+                // Pop until opening parenthesis is found
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    postfix.append(stack.pop());
+                }
+
+                // Remove opening parenthesis
+                stack.pop();
+            }
+
+            // If character is an operator
+            else {
+
+                // Pop operators having higher or equal precedence
+                while (!stack.isEmpty()
+                        && stack.peek() != '('
+                        && precedence(stack.peek()) >= precedence(ch)) {
+
+                    postfix.append(stack.pop());
+                }
+
+                // Push current operator
+                stack.push(ch);
+            }
+        }
+
+        // Pop remaining operators from stack
+        while (!stack.isEmpty()) {
+            postfix.append(stack.pop());
+        }
+
+        // Return final postfix expression
+        return postfix.toString();
+    }
+
+    public static void main(String[] args) {
+
+        // Infix expression
+        String infix = "A+B*(C-D)";
+
+        // Convert infix to postfix
+        String postfix = infixToPostfix(infix);
+
+        // Print the result
+        System.out.println("Infix Expression   : " + infix);
+        System.out.println("Postfix Expression : " + postfix);
+    }
+}
