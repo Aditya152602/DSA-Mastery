@@ -1,0 +1,80 @@
+
+import java.util.Stack;
+
+public class EvaluatePostfix {
+
+    public static int evaluatePostfix(String expression) {
+
+        // Create a stack to store operands
+        Stack<Integer> stack = new Stack<>();
+
+        // Split the expression using spaces
+        String[] tokens = expression.trim().split("\\s+");
+
+        // Traverse each token from left to right
+        for (String token : tokens) {
+
+            // Check if the token is an operator
+            if (token.equals("+") ||
+                token.equals("-") ||
+                token.equals("*") ||
+                token.equals("/")) {
+
+                // Pop the second operand first
+                int b = stack.pop();
+
+                // Pop the first operand next
+                int a = stack.pop();
+
+                // Variable to store the result
+                int result = 0;
+
+                // Perform the operation
+                switch (token) {
+                    case "+":
+                        result = a + b;
+                        break;
+
+                    case "-":
+                        result = a - b;
+                        break;
+
+                    case "*":
+                        result = a * b;
+                        break;
+
+                    case "/":
+                        result = a / b;
+                        break;
+                }
+
+                // Push the result back onto the stack
+                stack.push(result);
+
+            } else {
+
+                // Convert the number into an integer
+                int number = Integer.parseInt(token);
+
+                // Push the number onto the stack
+                stack.push(number);
+            }
+        }
+
+        // The final answer is the only value left
+        return stack.pop();
+    }
+
+    public static void main(String[] args) {
+
+        // Example postfix expression
+        String expression = "5 3 2 * +";
+
+        // Evaluate the expression
+        int result = evaluatePostfix(expression);
+
+        // Display the result
+        System.out.println("Postfix Expression: " + expression);
+        System.out.println("Result: " + result);
+    }
+}
