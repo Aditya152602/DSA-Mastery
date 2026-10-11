@@ -1,0 +1,87 @@
+
+import java.util.Stack;
+import java.util.Scanner;
+
+public class EvaluatePrefix {
+
+    // Method to evaluate a prefix expression
+    public static int evaluatePrefix(String expression) {
+
+        // Create a stack to store operands
+        Stack<Integer> stack = new Stack<>();
+
+        // Split the expression into tokens
+        String[] tokens = expression.trim().split("\\s+");
+
+        // Traverse the expression from right to left
+        for (int i = tokens.length - 1; i >= 0; i--) {
+
+            // Get the current token
+            String token = tokens[i];
+
+            // If the token is an operator
+            if (token.equals("+") || token.equals("-") ||
+                token.equals("*") || token.equals("/")) {
+
+                // Pop the first operand
+                int operand1 = stack.pop();
+
+                // Pop the second operand
+                int operand2 = stack.pop();
+
+                // Perform the operation
+                int result = 0;
+
+                switch (token) {
+                    case "+":
+                        result = operand1 + operand2;
+                        break;
+
+                    case "-":
+                        result = operand1 - operand2;
+                        break;
+
+                    case "*":
+                        result = operand1 * operand2;
+                        break;
+
+                    case "/":
+                        result = operand1 / operand2;
+                        break;
+                }
+
+                // Push the result back onto the stack
+                stack.push(result);
+
+            } else {
+
+                // If the token is a number, push it onto the stack
+                stack.push(Integer.parseInt(token));
+            }
+        }
+
+        // The final result is at the top of the stack
+        return stack.pop();
+    }
+
+    public static void main(String[] args) {
+
+        // Create a Scanner object for user input
+        Scanner sc = new Scanner(System.in);
+
+        // Ask the user to enter a prefix expression
+        System.out.println("Enter a prefix expression (space-separated):");
+
+        // Read the expression
+        String expression = sc.nextLine();
+
+        // Evaluate the expression
+        int result = evaluatePrefix(expression);
+
+        // Display the result
+        System.out.println("Result: " + result);
+
+        // Close the Scanner
+        sc.close();
+    }
+}
