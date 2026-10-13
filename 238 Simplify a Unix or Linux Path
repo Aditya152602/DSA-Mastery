@@ -1,0 +1,60 @@
+
+import java.util.*;
+
+public class Main {
+    public static String simplifyPath(String path) {
+
+        // Create a stack to store directory names
+        Stack<String> stack = new Stack<>();
+
+        // Split the path using slash
+        String[] parts = path.split("/+");
+
+        // Process every part of the path
+        for (String part : parts) {
+
+            // Ignore empty strings and current directory
+            if (part.isEmpty() || part.equals(".")) {
+                continue;
+            }
+
+            // Move one directory up
+            else if (part.equals("..")) {
+
+                // Remove the last directory if available
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            }
+
+            // Store a valid directory name
+            else {
+                stack.push(part);
+            }
+        }
+
+        // Build the simplified absolute path
+        StringBuilder result = new StringBuilder();
+
+        // Add each directory with a slash
+        for (String directory : stack) {
+            result.append("/").append(directory);
+        }
+
+        // Return root if no directories remain
+        if (result.length() == 0) {
+            return "/";
+        }
+
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+
+        // Example input
+        String path = "/a/./b/../../c/";
+
+        // Display the simplified path
+        System.out.println(simplifyPath(path));
+    }
+}
