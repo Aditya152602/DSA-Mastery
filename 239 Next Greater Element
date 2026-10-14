@@ -1,1 +1,55 @@
 
+import java.util.Arrays;
+import java.util.Stack;
+
+public class NextGreaterElement {
+
+    public static int[] findNextGreater(int[] arr) {
+
+        // Create an array to store the answers.
+        int n = arr.length;
+        int[] result = new int[n];
+
+        // Create a stack to store elements.
+        Stack<Integer> stack = new Stack<>();
+
+        // Traverse the array from right to left.
+        for (int i = n - 1; i >= 0; i--) {
+
+            // Remove elements smaller than or equal to arr[i].
+            while (!stack.isEmpty() && stack.peek() <= arr[i]) {
+                stack.pop();
+            }
+
+            // If the stack is empty, no greater element exists.
+            if (stack.isEmpty()) {
+                result[i] = -1;
+            } else {
+                // The top element is the next greater element.
+                result[i] = stack.peek();
+            }
+
+            // Push the current element onto the stack.
+            stack.push(arr[i]);
+        }
+
+        // Return the array containing the answers.
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Initialize the input array.
+        int[] arr = {4, 5, 2, 10, 8};
+
+        // Find the next greater elements.
+        int[] result = findNextGreater(arr);
+
+        // Print the original array.
+        System.out.println("Input: " + Arrays.toString(arr));
+
+        // Print the result array.
+        System.out.println("Output: " + Arrays.toString(result));
+    }
+}
+
