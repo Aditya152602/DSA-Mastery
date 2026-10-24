@@ -1,0 +1,70 @@
+
+import java.util.Stack;
+
+public class StockSpan {
+
+    public static void main(String[] args) {
+
+        // Store the stock prices for seven days.
+        int[] prices = {100, 80, 60, 70, 60, 75, 85};
+
+        // Find the total number of days.
+        int n = prices.length;
+
+        // Create an array to store the span of each day.
+        int[] span = new int[n];
+
+        // Create a stack to store the indices of stock prices.
+        Stack<Integer> stack = new Stack<>();
+
+        // Visit each day's stock price from left to right.
+        for (int i = 0; i < n; i++) {
+
+            // Remove indices whose stock prices are less than
+            // or equal to the current day's stock price.
+            while (!stack.isEmpty()
+                    && prices[stack.peek()] <= prices[i]) {
+
+                // Remove the index from the top of the stack.
+                stack.pop();
+            }
+
+            // If the stack is empty, all previous prices
+            // are less than or equal to the current price.
+            if (stack.isEmpty()) {
+
+                // The span includes every day from day 1 to today.
+                span[i] = i + 1;
+            }
+
+            // Otherwise, the top index is the previous
+            // day with a strictly greater stock price.
+            else {
+
+                // Calculate the span using the previous greater index.
+                span[i] = i - stack.peek();
+            }
+
+            // Push the current day's index onto the stack.
+            stack.push(i);
+        }
+
+        // Print the stock span results.
+        System.out.print("Stock Span: [");
+
+        // Visit every span value.
+        for (int i = 0; i < n; i++) {
+
+            // Print a comma before each value except the first.
+            if (i > 0) {
+                System.out.print(", ");
+            }
+
+            // Print the span for the current day.
+            System.out.print(span[i]);
+        }
+
+        // Close the output bracket and move to the next line.
+        System.out.println("]");
+    }
+}
