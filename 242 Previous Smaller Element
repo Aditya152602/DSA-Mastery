@@ -1,0 +1,57 @@
+
+import java.util.Stack;
+
+public class PreviousSmallerElement {
+
+    public static void main(String[] args) {
+
+        // Create the input array.
+        int[] arr = {4, 2, 7, 1, 5};
+
+        // Create a stack to store elements.
+        Stack<Integer> stack = new Stack<>();
+
+        // Create an array to store the answers.
+        int[] result = new int[arr.length];
+
+        // Visit every element from left to right.
+        for (int i = 0; i < arr.length; i++) {
+
+            // Remove elements greater than or equal to the current element.
+            while (!stack.isEmpty() && stack.peek() >= arr[i]) {
+                stack.pop();
+            }
+
+            // If the stack is empty, no smaller element exists on the left.
+            if (stack.isEmpty()) {
+                result[i] = -1;
+            }
+
+            // Otherwise, the top element is the previous smaller element.
+            else {
+                result[i] = stack.peek();
+            }
+
+            // Push the current element onto the stack.
+            stack.push(arr[i]);
+        }
+
+        // Print the result array.
+        System.out.print("Previous Smaller Elements: [");
+
+        // Visit every answer in the result array.
+        for (int i = 0; i < result.length; i++) {
+
+            // Print a comma before every element except the first.
+            if (i > 0) {
+                System.out.print(", ");
+            }
+
+            // Print the current answer.
+            System.out.print(result[i]);
+        }
+
+        // Close the output bracket.
+        System.out.println("]");
+    }
+}
