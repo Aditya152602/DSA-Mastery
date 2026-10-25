@@ -1,0 +1,77 @@
+
+public class RemoveKDigits {
+
+    // Create a method to remove k digits and return the smallest number.
+    public static String removeKdigits(String num, int k) {
+
+        // Create a StringBuilder to work like a stack.
+        StringBuilder stack = new StringBuilder();
+
+        // Visit each digit of the input number.
+        for (int i = 0; i < num.length(); i++) {
+
+            // Get the current digit.
+            char digit = num.charAt(i);
+
+            // Remove larger digits from the end while removals remain.
+            while (k > 0
+                    && stack.length() > 0
+                    && stack.charAt(stack.length() - 1) > digit) {
+
+                // Remove the last digit from the stack.
+                stack.deleteCharAt(stack.length() - 1);
+
+                // Decrease the number of digits still to remove.
+                k--;
+            }
+
+            // Add the current digit to the stack.
+            stack.append(digit);
+        }
+
+        // If removals remain, remove digits from the end.
+        while (k > 0 && stack.length() > 0) {
+
+            // Remove the last digit.
+            stack.deleteCharAt(stack.length() - 1);
+
+            // Decrease the remaining removal count.
+            k--;
+        }
+
+        // Find the first digit that is not zero.
+        int start = 0;
+
+        // Skip all leading zeros.
+        while (start < stack.length()
+                && stack.charAt(start) == '0') {
+
+            // Move to the next digit.
+            start++;
+        }
+
+        // If all digits were removed or only zeros remain, return zero.
+        if (start == stack.length()) {
+            return "0";
+        }
+
+        // Return the number without leading zeros.
+        return stack.substring(start);
+    }
+
+    // Run the program.
+    public static void main(String[] args) {
+
+        // Store the input number.
+        String num = "1432219";
+
+        // Store how many digits must be removed.
+        int k = 3;
+
+        // Call the method to get the smallest possible number.
+        String result = removeKdigits(num, k);
+
+        // Print the final result.
+        System.out.println("Smallest number: " + result);
+    }
+}
