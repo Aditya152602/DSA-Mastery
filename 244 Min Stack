@@ -1,0 +1,102 @@
+
+import java.util.Stack;
+
+public class MinStack {
+
+    // Store all the stack elements.
+    private Stack<Integer> stack = new Stack<>();
+
+    // Store the minimum element at each level.
+    private Stack<Integer> minStack = new Stack<>();
+
+    // Add an element to the Min Stack.
+    public void push(int value) {
+
+        // Push the value onto the main stack.
+        stack.push(value);
+
+        // If the minimum stack is empty, store the value.
+        if (minStack.isEmpty()) {
+            minStack.push(value);
+        }
+
+        // If the new value is smaller than or equal to
+        // the current minimum, update the minimum stack.
+        else if (value <= minStack.peek()) {
+            minStack.push(value);
+        }
+    }
+
+    // Remove the top element from the Min Stack.
+    public void pop() {
+
+        // Check whether the stack contains any elements.
+        if (stack.isEmpty()) {
+            System.out.println("Stack is empty!");
+            return;
+        }
+
+        // Remove the top element from the main stack.
+        int removed = stack.pop();
+
+        // If the removed value is the current minimum,
+        // remove it from the minimum stack as well.
+        if (removed == minStack.peek()) {
+            minStack.pop();
+        }
+    }
+
+    // Return the top element without removing it.
+    public int top() {
+
+        // Check whether the stack is empty.
+        if (stack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+
+        // Return the top element.
+        return stack.peek();
+    }
+
+    // Return the minimum element in constant time.
+    public int getMin() {
+
+        // Check whether the stack is empty.
+        if (minStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+
+        // The top of the minimum stack is the current minimum.
+        return minStack.peek();
+    }
+
+    // Run and test the Min Stack.
+    public static void main(String[] args) {
+
+        // Create a Min Stack object.
+        MinStack ms = new MinStack();
+
+        // Push three elements onto the stack.
+        ms.push(5);
+        ms.push(3);
+        ms.push(7);
+
+        // Print the current top element.
+        System.out.println("Top: " + ms.top());
+
+        // Print the current minimum element.
+        System.out.println("Minimum: " + ms.getMin());
+
+        // Remove the top element, which is 7.
+        ms.pop();
+
+        // Print the minimum after removing 7.
+        System.out.println("Minimum after pop: " + ms.getMin());
+
+        // Remove 3, which is the current minimum.
+        ms.pop();
+
+        // Print the new minimum.
+        System.out.println("Minimum after second pop: " + ms.getMin());
+    }
+}
