@@ -1,0 +1,103 @@
+
+import java.util.Stack;
+
+public class MaxStack {
+
+    // Store all the elements of the stack.
+    private Stack<Integer> stack = new Stack<>();
+
+    // Store the maximum elements at each level.
+    private Stack<Integer> maxStack = new Stack<>();
+
+    // Add a new element to the stack.
+    public void push(int value) {
+
+        // Add the value to the main stack.
+        stack.push(value);
+
+        // If maxStack is empty, this value is the maximum.
+        if (maxStack.isEmpty()) {
+            maxStack.push(value);
+        }
+
+        // If the new value is greater than or equal to
+        // the current maximum, update maxStack.
+        else if (value >= maxStack.peek()) {
+            maxStack.push(value);
+        }
+    }
+
+    // Remove the top element from the stack.
+    public void pop() {
+
+        // Check whether the stack is empty.
+        if (stack.isEmpty()) {
+            System.out.println("Stack is empty!");
+            return;
+        }
+
+        // Remove the top element from the main stack.
+        int removed = stack.pop();
+
+        // If the removed value is the current maximum,
+        // remove it from maxStack too.
+        if (removed == maxStack.peek()) {
+            maxStack.pop();
+        }
+    }
+
+    // Return the top element without removing it.
+    public int top() {
+
+        // Check whether the stack is empty.
+        if (stack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+
+        // Return the top element.
+        return stack.peek();
+    }
+
+    // Return the maximum element in constant time.
+    public int getMax() {
+
+        // Check whether the stack is empty.
+        if (maxStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+
+        // The top of maxStack contains the current maximum.
+        return maxStack.peek();
+    }
+
+    // Test the Max Stack.
+    public static void main(String[] args) {
+
+        // Create a MaxStack object.
+        MaxStack ms = new MaxStack();
+
+        // Push four elements into the stack.
+        ms.push(5);
+        ms.push(3);
+        ms.push(7);
+        ms.push(2);
+
+        // Print the top element.
+        System.out.println("Top: " + ms.top());
+
+        // Print the current maximum element.
+        System.out.println("Maximum: " + ms.getMax());
+
+        // Remove the top element, which is 2.
+        ms.pop();
+
+        // Print the maximum after removing 2.
+        System.out.println("Maximum after pop: " + ms.getMax());
+
+        // Remove 7, the current maximum.
+        ms.pop();
+
+        // Print the new maximum.
+        System.out.println("Maximum after second pop: " + ms.getMax());
+    }
+}
