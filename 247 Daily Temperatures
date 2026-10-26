@@ -1,0 +1,53 @@
+
+import java.util.Arrays;
+import java.util.Stack;
+
+public class DailyTemperatures {
+
+    public static int[] dailyTemperatures(int[] temperatures) {
+
+        // Find the total number of days.
+        int n = temperatures.length;
+
+        // Store the waiting days for every temperature.
+        int[] answer = new int[n];
+
+        // Store the indices of days waiting for warmer temperatures.
+        Stack<Integer> stack = new Stack<>();
+
+        // Visit every day from left to right.
+        for (int i = 0; i < n; i++) {
+
+            // Check whether today's temperature is warmer
+            // than the temperature at the top of the stack.
+            while (!stack.isEmpty()
+                    && temperatures[i] > temperatures[stack.peek()]) {
+
+                // Remove the index of the day that found
+                // its next warmer day.
+                int previousDay = stack.pop();
+
+                // Calculate the number of days to wait.
+                answer[previousDay] = i - previousDay;
+            }
+
+            // Store today's index for future comparison.
+            stack.push(i);
+        }
+
+        // Return the number of days to wait for each day.
+        return answer;
+    }
+
+    public static void main(String[] args) {
+
+        // Store the example temperatures.
+        int[] temperatures = {73, 74, 75, 71, 69, 72, 76, 73};
+
+        // Calculate the waiting days.
+        int[] result = dailyTemperatures(temperatures);
+
+        // Print the final result.
+        System.out.println(Arrays.toString(result));
+    }
+}
