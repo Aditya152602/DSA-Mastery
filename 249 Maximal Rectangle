@@ -1,0 +1,128 @@
+
+import java.util.Stack;
+
+public class MaximalRectangle {
+
+    // Find the largest rectangle in a histogram.
+    public static int largestRectangleArea(int[] heights) {
+
+        // Store the number of bars.
+        int n = heights.length;
+
+        // Store the maximum rectangle area.
+        int maxArea = 0;
+
+        // Store indices of bars in increasing height order.
+        Stack<Integer> stack = new Stack<>();
+
+        // Visit all bars and one extra imaginary bar of height zero.
+        for (int i = 0; i <= n; i++) {
+
+            // Use zero at the end to process remaining bars.
+            int currentHeight = (i == n) ? 0 : heights[i];
+
+            // Process taller bars when a shorter bar is found.
+            while (!stack.isEmpty()
+                    && heights[stack.peek()] > currentHeight) {
+
+                // Remove the index of the taller bar.
+                int index = stack.pop();
+
+                // Get the height of the rectangle.
+                int height = heights[index];
+
+                // Calculate the width of the rectangle.
+                int width;
+
+                // If no smaller bar exists on the left,
+                // the rectangle starts at index zero.
+                if (stack.isEmpty()) {
+                    width = i;
+                } else {
+                    // Otherwise, exclude the smaller bar on the left.
+                    width = i - stack.peek() - 1;
+                }
+
+                // Calculate the area.
+                int area = height * width;
+
+                // Update the maximum area.
+                if (area > maxArea) {
+                    maxArea = area;
+                }
+            }
+
+            // Push the current bar index.
+            stack.push(i);
+        }
+
+        // Return the largest histogram rectangle.
+        return maxArea;
+    }
+
+    // Find the maximal rectangle containing only '1's.
+    public static int maximalRectangle(char[][] matrix) {
+
+        // Handle an empty matrix.
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+
+        // Get the number of rows.
+        int rows = matrix.length;
+
+        // Get the number of columns.
+        int cols = matrix[0].length;
+
+        // Store consecutive heights of '1's in each column.
+        int[] heights = new int[cols];
+
+        // Store the largest rectangle found.
+        int maxArea = 0;
+
+        // Process the matrix one row at a time.
+        for (int i = 0; i < rows; i++) {
+
+            // Update histogram heights for the current row.
+            for (int j = 0; j < cols; j++) {
+
+                // Extend the height if the cell contains '1'.
+                if (matrix[i][j] == '1') {
+                    heights[j]++;
+                } else {
+                    // Reset the height if the cell contains '0'.
+                    heights[j] = 0;
+                }
+            }
+
+            // Find the largest rectangle for this histogram.
+            int area = largestRectangleArea(heights);
+
+            // Update the overall maximum area.
+            if (area > maxArea) {
+                maxArea = area;
+            }
+        }
+
+        // Return the largest rectangle in the matrix.
+        return maxArea;
+    }
+
+    // Main method to test the program.
+    public static void main(String[] args) {
+
+        // Create the binary matrix.
+        char[][] matrix = {
+            {'1', '0', '1', '0', '0'},
+            {'1', '0', '1', '1', '1'},
+            {'1', '1', '1', '1', '1'},
+            {'1', '0', '0', '1', '0'}
+        };
+
+        // Calculate the maximum rectangle area.
+        int result = maximalRectangle(matrix);
+
+        // Print the answer.
+        System.out.println("Maximal Rectangle Area: " + result);
+    }
+}
