@@ -1,0 +1,64 @@
+
+import java.util.Stack;
+
+public class TrappingRainWater {
+
+    // Method to calculate the total trapped rainwater.
+    public static int trap(int[] height) {
+
+        // Store the total amount of trapped water.
+        int water = 0;
+
+        // Store indices of bars using a stack.
+        Stack<Integer> stack = new Stack<>();
+
+        // Visit each bar from left to right.
+        for (int i = 0; i < height.length; i++) {
+
+            // Process the stack when the current bar is taller.
+            while (!stack.isEmpty()
+                    && height[i] > height[stack.peek()]) {
+
+                // Remove the index of the bottom of the water gap.
+                int bottom = stack.pop();
+
+                // Stop if there is no left boundary.
+                if (stack.isEmpty()) {
+                    break;
+                }
+
+                // Find the left boundary of the water.
+                int left = stack.peek();
+
+                // Calculate the width between the boundaries.
+                int width = i - left - 1;
+
+                // Find the height of the shorter boundary.
+                int boundedHeight =
+                    Math.min(height[left], height[i]) - height[bottom];
+
+                // Calculate and add the trapped water.
+                water = water + width * boundedHeight;
+            }
+
+            // Store the current bar index.
+            stack.push(i);
+        }
+
+        // Return the total trapped rainwater.
+        return water;
+    }
+
+    // Main method to test the program.
+    public static void main(String[] args) {
+
+        // Store the heights of the bars.
+        int[] height = {4, 2, 0, 3, 2, 5};
+
+        // Calculate the trapped water.
+        int result = trap(height);
+
+        // Print the final answer.
+        System.out.println("Trapped Rain Water: " + result);
+    }
+}
