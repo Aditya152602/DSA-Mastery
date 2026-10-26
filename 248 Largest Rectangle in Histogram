@@ -1,0 +1,74 @@
+
+import java.util.Stack;
+
+public class LargestRectangleInHistogram {
+
+    // Method to find the maximum rectangular area.
+    public static int largestRectangleArea(int[] heights) {
+
+        // Store the number of bars.
+        int n = heights.length;
+
+        // Store the maximum area found so far.
+        int maxArea = 0;
+
+        // Store the indices of bars in increasing height order.
+        Stack<Integer> stack = new Stack<>();
+
+        // Visit every bar and one extra imaginary bar of height zero.
+        for (int i = 0; i <= n; i++) {
+
+            // Use zero at the end to process the remaining bars.
+            int currentHeight = (i == n) ? 0 : heights[i];
+
+            // Process taller bars when a shorter bar is encountered.
+            while (!stack.isEmpty()
+                    && heights[stack.peek()] > currentHeight) {
+
+                // Remove the index of the bar being processed.
+                int index = stack.pop();
+
+                // Get the height of the removed bar.
+                int height = heights[index];
+
+                // Calculate the width using the remaining stack.
+                int width;
+
+                // If the stack is empty, the rectangle starts at index zero.
+                if (stack.isEmpty()) {
+                    width = i;
+                } else {
+                    // Otherwise, the rectangle starts after the new stack top.
+                    width = i - stack.peek() - 1;
+                }
+
+                // Calculate the area of the current rectangle.
+                int area = height * width;
+
+                // Update the maximum area if necessary.
+                if (area > maxArea) {
+                    maxArea = area;
+                }
+            }
+
+            // Push the current index onto the stack.
+            stack.push(i);
+        }
+
+        // Return the largest rectangular area.
+        return maxArea;
+    }
+
+    // Main method to run the program.
+    public static void main(String[] args) {
+
+        // Create the histogram using bar heights.
+        int[] heights = {2, 1, 5, 6, 2, 3};
+
+        // Find the largest rectangular area.
+        int result = largestRectangleArea(heights);
+
+        // Print the answer.
+        System.out.println("Largest Rectangle Area: " + result);
+    }
+}
