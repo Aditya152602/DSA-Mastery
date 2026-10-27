@@ -1,0 +1,135 @@
+
+public class MyCircularQueue {
+
+    // Array used to store queue elements
+    private int[] arr;
+
+    // Maximum capacity of the queue
+    private int capacity;
+
+    // Index of the front element
+    private int front;
+
+    // Index of the rear element
+    private int rear;
+
+    // Number of elements currently in the queue
+    private int size;
+
+    // Constructor to create a circular queue
+    public MyCircularQueue(int k) {
+
+        // Create an array of size k
+        arr = new int[k];
+
+        // Set maximum capacity
+        capacity = k;
+
+        // Initially, the queue is empty
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    // Insert an element into the queue
+    public boolean enQueue(int value) {
+
+        // Cannot insert if the queue is full
+        if (isFull()) {
+            return false;
+        }
+
+        // Move rear circularly to the next position
+        rear = (rear + 1) % capacity;
+
+        // Store the new element
+        arr[rear] = value;
+
+        // Increase the number of elements
+        size++;
+
+        // Insertion successful
+        return true;
+    }
+
+    // Remove the front element
+    public boolean deQueue() {
+
+        // Cannot remove from an empty queue
+        if (isEmpty()) {
+            return false;
+        }
+
+        // Move front circularly to the next position
+        front = (front + 1) % capacity;
+
+        // Decrease the number of elements
+        size--;
+
+        // Removal successful
+        return true;
+    }
+
+    // Return the front element
+    public int Front() {
+
+        // Return -1 if the queue is empty
+        if (isEmpty()) {
+            return -1;
+        }
+
+        // Return the first element
+        return arr[front];
+    }
+
+    // Return the rear element
+    public int Rear() {
+
+        // Return -1 if the queue is empty
+        if (isEmpty()) {
+            return -1;
+        }
+
+        // Return the last inserted element
+        return arr[rear];
+    }
+
+    // Check whether the queue is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Check whether the queue is full
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    // Test the circular queue
+    public static void main(String[] args) {
+
+        // Create a queue with capacity 3
+        MyCircularQueue q = new MyCircularQueue(3);
+
+        // Insert elements
+        System.out.println(q.enQueue(10)); // true
+        System.out.println(q.enQueue(20)); // true
+        System.out.println(q.enQueue(30)); // true
+
+        // Queue is full, so insertion fails
+        System.out.println(q.enQueue(40)); // false
+
+        // Display front and rear
+        System.out.println(q.Front());     // 10
+        System.out.println(q.Rear());      // 30
+
+        // Remove the front element
+        System.out.println(q.deQueue());   // true
+
+        // Insert 40 into the freed position
+        System.out.println(q.enQueue(40)); // true
+
+        // Display updated front and rear
+        System.out.println(q.Front());     // 20
+        System.out.println(q.Rear());      // 40
+    }
+}
