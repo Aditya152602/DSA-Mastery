@@ -1,0 +1,101 @@
+
+import java.util.*;
+
+public class MaximumOfMinimum {
+
+    public static int[] maxOfMin(int[] arr) {
+
+        // Store the length of the array
+        int n = arr.length;
+
+        // Store the index of the nearest smaller element on the left
+        int[] left = new int[n];
+
+        // Store the index of the nearest smaller element on the right
+        int[] right = new int[n];
+
+        // This array stores the answer for each window size
+        int[] answer = new int[n];
+
+        // Stack stores indices of array elements
+        Stack<Integer> stack = new Stack<>();
+
+        // Initially, no answer has been calculated
+        Arrays.fill(answer, Integer.MIN_VALUE);
+
+        // Find nearest smaller element on the left
+        for (int i = 0; i < n; i++) {
+
+            // Remove elements greater than or equal to current element
+            while (!stack.isEmpty() &&
+                   arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+
+            // If stack is empty, no smaller element exists on the left
+            if (stack.isEmpty()) {
+                left[i] = -1;
+            } else {
+                left[i] = stack.peek();
+            }
+
+            // Store current index
+            stack.push(i);
+        }
+
+        // Clear the stack before the next traversal
+        stack.clear();
+
+        // Find nearest smaller element on the right
+        for (int i = n - 1; i >= 0; i--) {
+
+            // Remove elements greater than or equal to current element
+            while (!stack.isEmpty() &&
+                   arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+
+            // If stack is empty, no smaller element exists on the right
+            if (stack.isEmpty()) {
+                right[i] = n;
+            } else {
+                right[i] = stack.peek();
+            }
+
+            // Store current index
+            stack.push(i);
+        }
+
+        // Find the maximum window size for each element
+        for (int i = 0; i < n; i++) {
+
+            // Calculate the size of the window
+            int windowSize = right[i] - left[i] - 1;
+
+            // Update the answer for this window size
+            answer[windowSize - 1] =
+                Math.max(answer[windowSize - 1], arr[i]);
+        }
+
+        // Fill missing answers using the previous window size
+        for (int i = n - 2; i >= 0; i--) {
+
+            answer[i] = Math.max(answer[i], answer[i + 1]);
+        }
+
+        // Return the final answers
+        return answer;
+    }
+
+    public static void main(String[] args) {
+
+        // Input array
+        int[] arr = {10, 20, 30, 50, 10, 70, 30};
+
+        // Calculate maximum of minimums
+        int[] result = maxOfMin(arr);
+
+        // Print the result
+        System.out.println(Arrays.toString(result));
+    }
+}
