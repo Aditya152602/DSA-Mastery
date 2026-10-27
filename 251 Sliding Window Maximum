@@ -1,0 +1,63 @@
+
+import java.util.*;
+
+public class SlidingWindowMaximum {
+
+    public static int[] maxSlidingWindow(int[] nums, int k) {
+
+        // Store the maximum of each window in this array
+        int[] result = new int[nums.length - k + 1];
+
+        // Deque stores indices of array elements
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        // This tracks the position in the result array
+        int resultIndex = 0;
+
+        // Visit every element of the input array
+        for (int i = 0; i < nums.length; i++) {
+
+            // Remove indices that are outside the window
+            while (!deque.isEmpty() && deque.peekFirst() <= i - k) {
+                deque.pollFirst();
+            }
+
+            // Remove smaller elements from the back
+            while (!deque.isEmpty() &&
+                   nums[deque.peekLast()] <= nums[i]) {
+                deque.pollLast();
+            }
+
+            // Add the current element's index
+            deque.offerLast(i);
+
+            // Start recording answers when the first window is complete
+            if (i >= k - 1) {
+
+                // The front contains the index of the maximum
+                result[resultIndex] = nums[deque.peekFirst()];
+
+                // Move to the next result position
+                resultIndex++;
+            }
+        }
+
+        // Return all window maximums
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Input array
+        int[] nums = {1, 3, -1, -3, 5, 3, 6, 7};
+
+        // Window size
+        int k = 3;
+
+        // Calculate window maximums
+        int[] answer = maxSlidingWindow(nums, k);
+
+        // Print the result
+        System.out.println(Arrays.toString(answer));
+    }
+}
