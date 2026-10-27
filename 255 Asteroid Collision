@@ -1,0 +1,70 @@
+
+import java.util.*;
+
+public class AsteroidCollision {
+
+    public static int[] asteroidCollision(int[] asteroids) {
+
+        // Stack stores asteroids that survive collisions
+        Stack<Integer> stack = new Stack<>();
+
+        // Process each asteroid from left to right
+        for (int asteroid : asteroids) {
+
+            // Assume the current asteroid survives initially
+            boolean alive = true;
+
+            // Check whether the current asteroid collides with the stack top
+            while (alive && asteroid < 0 && !stack.isEmpty()
+                    && stack.peek() > 0) {
+
+                // Get the size of the asteroid moving right
+                int top = stack.peek();
+
+                // If the stack asteroid is smaller, it explodes
+                if (top < -asteroid) {
+                    stack.pop();
+                }
+
+                // If both asteroids have equal sizes, both explode
+                else if (top == -asteroid) {
+                    stack.pop();
+                    alive = false;
+                }
+
+                // If the stack asteroid is larger, current asteroid explodes
+                else {
+                    alive = false;
+                }
+            }
+
+            // Add the current asteroid if it survives
+            if (alive) {
+                stack.push(asteroid);
+            }
+        }
+
+        // Convert the surviving asteroids into an array
+        int[] result = new int[stack.size()];
+
+        // Copy the stack elements in their original order
+        for (int i = 0; i < stack.size(); i++) {
+            result[i] = stack.get(i);
+        }
+
+        // Return the final surviving asteroids
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Example input
+        int[] asteroids = {5, 10, -5};
+
+        // Calculate surviving asteroids
+        int[] result = asteroidCollision(asteroids);
+
+        // Print the answer
+        System.out.println(Arrays.toString(result));
+    }
+}
