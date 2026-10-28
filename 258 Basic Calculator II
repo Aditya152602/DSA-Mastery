@@ -1,0 +1,84 @@
+
+import java.util.*;
+
+public class BasicCalculatorII {
+
+    public static int calculate(String s) {
+
+        // Stack stores numbers with their signs
+        Stack<Integer> stack = new Stack<>();
+
+        // Stores the number currently being read
+        int number = 0;
+
+        // Stores the previous operator
+        char operator = '+';
+
+        // Process each character, including a final extra step
+        for (int i = 0; i <= s.length(); i++) {
+
+            // If we are inside the string, get the current character
+            char ch = (i < s.length()) ? s.charAt(i) : '+';
+
+            // Build a multi-digit number
+            if (i < s.length() && Character.isDigit(ch)) {
+                number = number * 10 + (ch - '0');
+            }
+
+            // Process the number when an operator or the end is reached
+            if (i == s.length() ||
+                (ch != ' ' && !Character.isDigit(ch))) {
+
+                // Addition: store the number as positive
+                if (operator == '+') {
+                    stack.push(number);
+                }
+
+                // Subtraction: store the number as negative
+                else if (operator == '-') {
+                    stack.push(-number);
+                }
+
+                // Multiplication: calculate immediately
+                else if (operator == '*') {
+                    stack.push(stack.pop() * number);
+                }
+
+                // Division: calculate immediately
+                else if (operator == '/') {
+                    stack.push(stack.pop() / number);
+                }
+
+                // Save the current operator for the next number
+                if (i < s.length() && ch != ' ') {
+                    operator = ch;
+                }
+
+                // Reset the number for the next calculation
+                number = 0;
+            }
+        }
+
+        // Add all signed numbers in the stack
+        int result = 0;
+
+        while (!stack.isEmpty()) {
+            result = result + stack.pop();
+        }
+
+        // Return the final answer
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Example expression
+        String expression = "3+2*2";
+
+        // Calculate the expression
+        int answer = calculate(expression);
+
+        // Print the result
+        System.out.println(answer);
+    }
+}
