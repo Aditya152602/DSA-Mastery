@@ -1,0 +1,104 @@
+
+import java.util.*;
+
+public class BasicCalculator {
+
+    public static int calculate(String s) {
+
+        // Stack stores previous results and signs
+        Stack<Integer> stack = new Stack<>();
+
+        // Stores the final result calculated so far
+        int result = 0;
+
+        // Stores the number currently being read
+        int number = 0;
+
+        // Sign is 1 for positive and -1 for negative
+        int sign = 1;
+
+        // Process every character in the expression
+        for (int i = 0; i < s.length(); i++) {
+
+            // Get the current character
+            char ch = s.charAt(i);
+
+            // If the character is a digit, build the number
+            if (Character.isDigit(ch)) {
+                number = number * 10 + (ch - '0');
+            }
+
+            // If the character is '+', add the current number
+            else if (ch == '+') {
+                result = result + (sign * number);
+
+                // The next number will be positive
+                sign = 1;
+
+                // Reset number for the next value
+                number = 0;
+            }
+
+            // If the character is '-', subtract the current number
+            else if (ch == '-') {
+                result = result + (sign * number);
+
+                // The next number will be negative
+                sign = -1;
+
+                // Reset number for the next value
+                number = 0;
+            }
+
+            // If an opening parenthesis appears
+            else if (ch == '(') {
+
+                // Save the current sign
+                stack.push(sign);
+
+                // Save the current result
+                stack.push(result);
+
+                // Start calculating inside the parentheses
+                result = 0;
+                sign = 1;
+            }
+
+            // If a closing parenthesis appears
+            else if (ch == ')') {
+
+                // Add the last number inside the parentheses
+                result = result + (sign * number);
+
+                // Reset number after processing it
+                number = 0;
+
+                // Apply the sign saved before the parentheses
+                result = result * stack.pop();
+
+                // Add the result calculated before the parentheses
+                result = result + stack.pop();
+            }
+
+            // Spaces are ignored
+        }
+
+        // Add the final number because the expression has ended
+        result = result + (sign * number);
+
+        // Return the calculated answer
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Example expression
+        String expression = "(1 + (4 + 5 + 2) - 3) + (6 + 8)";
+
+        // Calculate the answer
+        int answer = calculate(expression);
+
+        // Print the result
+        System.out.println(answer);
+    }
+}
