@@ -1,0 +1,82 @@
+
+import java.util.*;
+
+public class DecodeString {
+
+    public static String decodeString(String s) {
+
+        // Stack to store repetition counts
+        Stack<Integer> countStack = new Stack<>();
+
+        // Stack to store previous strings
+        Stack<String> stringStack = new Stack<>();
+
+        // Stores the current number
+        int number = 0;
+
+        // Stores the current decoded string
+        String current = "";
+
+        // Process each character
+        for (int i = 0; i < s.length(); i++) {
+
+            // Get the current character
+            char ch = s.charAt(i);
+
+            // If the character is a digit, build the repetition count
+            if (Character.isDigit(ch)) {
+                number = number * 10 + (ch - '0');
+            }
+
+            // If an opening bracket appears, save the current state
+            else if (ch == '[') {
+                countStack.push(number);
+                stringStack.push(current);
+
+                // Start building the string inside the brackets
+                number = 0;
+                current = "";
+            }
+
+            // If a closing bracket appears, decode the current section
+            else if (ch == ']') {
+
+                // Get how many times to repeat the current string
+                int repeat = countStack.pop();
+
+                // Get the string built before the opening bracket
+                String previous = stringStack.pop();
+
+                // Repeat the current string
+                String repeated = "";
+
+                for (int j = 0; j < repeat; j++) {
+                    repeated = repeated + current;
+                }
+
+                // Combine the previous string with the repeated string
+                current = previous + repeated;
+            }
+
+            // If it is a letter, add it to the current string
+            else {
+                current = current + ch;
+            }
+        }
+
+        // Return the fully decoded string
+        return current;
+    }
+
+    public static void main(String[] args) {
+
+        // Example encoded string
+        String s = "3[a2[c]]";
+
+        // Decode the string
+        String result = decodeString(s);
+
+        // Print the result
+        System.out.println(result);
+    }
+}
