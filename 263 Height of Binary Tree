@@ -1,0 +1,54 @@
+
+public class Main {
+
+    // Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to create a node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Calculate the height of the binary tree
+    static int height(Node root) {
+
+        // Base case: an empty tree has height 0
+        if (root == null) {
+            return 0;
+        }
+
+        // Calculate the height of the left subtree
+        int leftHeight = height(root.left);
+
+        // Calculate the height of the right subtree
+        int rightHeight = height(root.right);
+
+        // Return the larger height plus the current node
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    public static void main(String[] args) {
+
+        // Create this binary tree:
+        //
+        //         1
+        //        / \
+        //       2   3
+        //      / \
+        //     4   5
+
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        // Calculate and print the height
+        System.out.println("Height of tree: " + height(root));
+    }
+}
