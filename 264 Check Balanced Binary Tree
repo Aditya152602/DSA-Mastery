@@ -1,0 +1,78 @@
+
+public class Main {
+
+    // Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to create a node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Calculate height and detect imbalance
+    static int checkHeight(Node root) {
+
+        // An empty tree has height 0
+        if (root == null) {
+            return 0;
+        }
+
+        // Find the height of the left subtree
+        int leftHeight = checkHeight(root.left);
+
+        // If the left subtree is unbalanced, stop
+        if (leftHeight == -1) {
+            return -1;
+        }
+
+        // Find the height of the right subtree
+        int rightHeight = checkHeight(root.right);
+
+        // If the right subtree is unbalanced, stop
+        if (rightHeight == -1) {
+            return -1;
+        }
+
+        // Check the height difference
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        }
+
+        // Return the height of the current subtree
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    // Return true if the tree is balanced
+    static boolean isBalanced(Node root) {
+        return checkHeight(root) != -1;
+    }
+
+    public static void main(String[] args) {
+
+        // Create a balanced binary tree:
+        //
+        //         1
+        //        / \
+        //       2   3
+        //      / \
+        //     4   5
+
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        // Check whether the tree is balanced
+        if (isBalanced(root)) {
+            System.out.println("The tree is balanced.");
+        } else {
+            System.out.println("The tree is not balanced.");
+        }
+    }
+}
