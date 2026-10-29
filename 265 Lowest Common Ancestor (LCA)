@@ -1,0 +1,83 @@
+
+public class Main {
+
+    // Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to create a node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Find the Lowest Common Ancestor
+    static Node lowestCommonAncestor(Node root, int p, int q) {
+
+        // If tree is empty, return null
+        if (root == null) {
+            return null;
+        }
+
+        // If current node is either target, return it
+        if (root.data == p || root.data == q) {
+            return root;
+        }
+
+        // Search for p or q in the left subtree
+        Node left = lowestCommonAncestor(root.left, p, q);
+
+        // Search for p or q in the right subtree
+        Node right = lowestCommonAncestor(root.right, p, q);
+
+        // If both sides return a node, current root is LCA
+        if (left != null && right != null) {
+            return root;
+        }
+
+        // Otherwise return the side that found a target
+        if (left != null) {
+            return left;
+        }
+
+        return right;
+    }
+
+    public static void main(String[] args) {
+
+        // Create the binary tree:
+        //
+        //          3
+        //         / \
+        //        5   1
+        //       / \ / \
+        //      6  2 0  8
+
+        Node root = new Node(3);
+        root.left = new Node(5);
+        root.right = new Node(1);
+
+        root.left.left = new Node(6);
+        root.left.right = new Node(2);
+
+        root.right.left = new Node(0);
+        root.right.right = new Node(8);
+
+        // Find the LCA of nodes 6 and 2
+        int p = 6;
+        int q = 2;
+
+        Node answer = lowestCommonAncestor(root, p, q);
+
+        // Print the answer
+        if (answer != null) {
+            System.out.println("Lowest Common Ancestor: "
+                    + answer.data);
+        } else {
+            System.out.println("LCA not found.");
+        }
+    }
+}
