@@ -1,0 +1,73 @@
+
+public class Main {
+
+    // Create a Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to initialize the node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Function to validate the BST
+    static boolean isValidBST(Node root) {
+
+        // Initially, there is no minimum or maximum limit
+        return checkBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    // Helper function to check valid value ranges
+    static boolean checkBST(Node root, long min, long max) {
+
+        // An empty tree is a valid BST
+        if (root == null) {
+            return true;
+        }
+
+        // Check whether the current node violates
+        // the allowed minimum or maximum range
+        if (root.data <= min || root.data >= max) {
+            return false;
+        }
+
+        // Check the left subtree
+        // All its values must be smaller than root.data
+        boolean leftValid =
+            checkBST(root.left, min, root.data);
+
+        // Check the right subtree
+        // All its values must be greater than root.data
+        boolean rightValid =
+            checkBST(root.right, root.data, max);
+
+        // Both subtrees must be valid
+        return leftValid && rightValid;
+    }
+
+    public static void main(String[] args) {
+
+        // Create a valid Binary Search Tree
+        Node root = new Node(10);
+
+        root.left = new Node(5);
+        root.right = new Node(15);
+
+        root.left.left = new Node(2);
+        root.left.right = new Node(7);
+
+        // Check whether the tree is a valid BST
+        boolean result = isValidBST(root);
+
+        // Print the result
+        if (result) {
+            System.out.println("Valid Binary Search Tree");
+        } else {
+            System.out.println("Invalid Binary Search Tree");
+        }
+    }
+}
