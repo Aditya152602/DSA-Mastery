@@ -1,0 +1,142 @@
+
+import java.util.*;
+
+public class Main {
+
+    // Create a Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to initialize a node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Store the serialized tree
+    static StringBuilder sb = new StringBuilder();
+
+    // Function to serialize the binary tree
+    static String serialize(Node root) {
+
+        // Start with an empty StringBuilder
+        sb = new StringBuilder();
+
+        // Convert the tree into a string
+        serializeHelper(root);
+
+        // Return the serialized string
+        return sb.toString();
+    }
+
+    // Helper function for preorder serialization
+    static void serializeHelper(Node root) {
+
+        // If the current node is null, store N
+        if (root == null) {
+            sb.append("N,");
+            return;
+        }
+
+        // Store the current node's value
+        sb.append(root.data).append(",");
+
+        // Serialize the left subtree
+        serializeHelper(root.left);
+
+        // Serialize the right subtree
+        serializeHelper(root.right);
+    }
+
+    // Function to deserialize the string
+    static Node deserialize(String data) {
+
+        // Split the string using commas
+        String[] values = data.split(",");
+
+        // Convert the array into a queue
+        Queue<String> queue = new LinkedList<>();
+
+        // Add all serialized values to the queue
+        for (String value : values) {
+            queue.offer(value);
+        }
+
+        // Rebuild and return the original tree
+        return deserializeHelper(queue);
+    }
+
+    // Helper function to rebuild the tree
+    static Node deserializeHelper(Queue<String> queue) {
+
+        // Get and remove the next value
+        String value = queue.poll();
+
+        // If the value is N, return null
+        if (value.equals("N")) {
+            return null;
+        }
+
+        // Create a new node using the current value
+        Node root = new Node(Integer.parseInt(value));
+
+        // Rebuild the left subtree
+        root.left = deserializeHelper(queue);
+
+        // Rebuild the right subtree
+        root.right = deserializeHelper(queue);
+
+        // Return the reconstructed node
+        return root;
+    }
+
+    // Function to print inorder traversal
+    static void inorder(Node root) {
+
+        // If node is null, stop
+        if (root == null) {
+            return;
+        }
+
+        // Visit left subtree
+        inorder(root.left);
+
+        // Print current node
+        System.out.print(root.data + " ");
+
+        // Visit right subtree
+        inorder(root.right);
+    }
+
+    public static void main(String[] args) {
+
+        // Create the original binary tree
+        Node root = new Node(1);
+
+        root.left = new Node(2);
+        root.right = new Node(3);
+
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        root.right.left = new Node(6);
+        root.right.right = new Node(7);
+
+        // Serialize the original tree
+        String serialized = serialize(root);
+
+        // Print the serialized string
+        System.out.println("Serialized Tree:");
+        System.out.println(serialized);
+
+        // Deserialize the string
+        Node newRoot = deserialize(serialized);
+
+        // Print the reconstructed tree using inorder
+        System.out.println("Inorder of Reconstructed Tree:");
+        inorder(newRoot);
+    }
+}
