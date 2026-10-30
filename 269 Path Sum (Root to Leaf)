@@ -1,0 +1,76 @@
+
+public class Main {
+
+    // Create a Node class for the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to initialize the node
+        Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+
+    // Function to check whether a root-to-leaf path
+    // exists with the given target sum
+    static boolean hasPathSum(Node root, int targetSum) {
+
+        // Base case: If the node is null, no path exists
+        if (root == null) {
+            return false;
+        }
+
+        // Subtract the current node's value
+        // from the target sum
+        targetSum = targetSum - root.data;
+
+        // Check whether the current node is a leaf
+        if (root.left == null && root.right == null) {
+
+            // If remaining sum is zero, path is found
+            return targetSum == 0;
+        }
+
+        // Recursively check the left subtree
+        boolean leftResult =
+            hasPathSum(root.left, targetSum);
+
+        // Recursively check the right subtree
+        boolean rightResult =
+            hasPathSum(root.right, targetSum);
+
+        // Return true if either subtree has a valid path
+        return leftResult || rightResult;
+    }
+
+    public static void main(String[] args) {
+
+        // Create the binary tree
+        Node root = new Node(5);
+
+        root.left = new Node(4);
+        root.right = new Node(8);
+
+        root.left.left = new Node(11);
+
+        root.left.left.left = new Node(7);
+        root.left.left.right = new Node(2);
+
+        root.right.left = new Node(13);
+        root.right.right = new Node(4);
+
+        root.right.right.right = new Node(1);
+
+        // Set the target sum
+        int targetSum = 20;
+
+        // Call the function and print the result
+        boolean result = hasPathSum(root, targetSum);
+
+        System.out.println("Target Sum: " + targetSum);
+        System.out.println("Path Exists: " + result);
+    }
+}
