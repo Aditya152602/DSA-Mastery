@@ -1,0 +1,108 @@
+
+import java.util.*;
+
+public class ShortestPathBFS {
+
+    // Function to find shortest distance
+    static int[] shortestPath(
+        int V,
+        ArrayList<ArrayList<Integer>> adj,
+        int source
+    ) {
+
+        // Create distance array
+        int[] distance = new int[V];
+
+        // Initialize all distances with -1
+        Arrays.fill(distance, -1);
+
+        // Create Queue
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Source distance is 0
+        distance[source] = 0;
+
+        // Add source to Queue
+        queue.add(source);
+
+        // Process Queue
+        while (!queue.isEmpty()) {
+
+            // Remove front vertex
+            int current = queue.poll();
+
+            // Visit all neighbors
+            for (int neighbor : adj.get(current)) {
+
+                // Check if neighbor is not visited
+                if (distance[neighbor] == -1) {
+
+                    // Calculate shortest distance
+                    distance[neighbor] =
+                        distance[current] + 1;
+
+                    // Add neighbor to Queue
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        // Return shortest distances
+        return distance;
+    }
+
+    public static void main(String[] args) {
+
+        // Number of vertices
+        int V = 5;
+
+        // Create adjacency list
+        ArrayList<ArrayList<Integer>> adj =
+            new ArrayList<>();
+
+        // Initialize adjacency list
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Add undirected edges
+        adj.get(0).add(1);
+        adj.get(1).add(0);
+
+        adj.get(0).add(3);
+        adj.get(3).add(0);
+
+        adj.get(1).add(2);
+        adj.get(2).add(1);
+
+        adj.get(1).add(3);
+        adj.get(3).add(1);
+
+        adj.get(1).add(4);
+        adj.get(4).add(1);
+
+        adj.get(2).add(4);
+        adj.get(4).add(2);
+
+        adj.get(3).add(2);
+        adj.get(2).add(3);
+
+        // Source vertex
+        int source = 0;
+
+        // Find shortest distances
+        int[] result = shortestPath(
+            V, adj, source
+        );
+
+        // Print result
+        System.out.println("Shortest distances:");
+
+        for (int i = 0; i < V; i++) {
+
+            System.out.println(
+                "0 to " + i + " = " + result[i]
+            );
+        }
+    }
+}
