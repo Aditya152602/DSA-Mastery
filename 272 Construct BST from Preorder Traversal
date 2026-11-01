@@ -1,0 +1,94 @@
+
+public class ConstructBST {
+
+    // Create a Node class
+    static class Node {
+
+        int data;
+        Node left, right;
+
+        // Constructor
+        Node(int data) {
+            this.data = data;
+            left = right = null;
+        }
+    }
+
+    // Global index to track preorder array
+    static int index = 0;
+
+    // Function to construct BST
+    static Node constructBST(int[] preorder,
+                             int min, int max) {
+
+        // If all elements are used
+        if (index == preorder.length) {
+            return null;
+        }
+
+        // Get current element
+        int value = preorder[index];
+
+        // Check whether value is within range
+        if (value <= min || value >= max) {
+            return null;
+        }
+
+        // Create new node
+        Node root = new Node(value);
+
+        // Move to next element
+        index++;
+
+        // Construct left subtree
+        root.left = constructBST(
+            preorder, min, value
+        );
+
+        // Construct right subtree
+        root.right = constructBST(
+            preorder, value, max
+        );
+
+        return root;
+    }
+
+    // Inorder traversal
+    static void inorder(Node root) {
+
+        if (root == null) {
+            return;
+        }
+
+        // Visit left subtree
+        inorder(root.left);
+
+        // Print root
+        System.out.print(root.data + " ");
+
+        // Visit right subtree
+        inorder(root.right);
+    }
+
+    // Main method
+    public static void main(String[] args) {
+
+        // Given preorder traversal
+        int[] preorder = {8, 5, 1, 7, 10, 12};
+
+        // Reset index
+        index = 0;
+
+        // Construct BST
+        Node root = constructBST(
+            preorder,
+            Integer.MIN_VALUE,
+            Integer.MAX_VALUE
+        );
+
+        // Print inorder traversal
+        System.out.println("Inorder Traversal:");
+
+        inorder(root);
+    }
+}
