@@ -1,0 +1,93 @@
+
+public class NumberOfIslands {
+
+    // DFS function
+    static void dfs(char[][] grid, int row, int col) {
+
+        // Get number of rows
+        int rows = grid.length;
+
+        // Get number of columns
+        int cols = grid[0].length;
+
+        // Check boundary conditions
+        if (row < 0 || col < 0 ||
+            row >= rows || col >= cols) {
+            return;
+        }
+
+        // Stop if current cell is water
+        if (grid[row][col] == '0') {
+            return;
+        }
+
+        // Mark current land as visited
+        grid[row][col] = '0';
+
+        // Move Up
+        dfs(grid, row - 1, col);
+
+        // Move Down
+        dfs(grid, row + 1, col);
+
+        // Move Left
+        dfs(grid, row, col - 1);
+
+        // Move Right
+        dfs(grid, row, col + 1);
+    }
+
+    // Function to count islands
+    static int numIslands(char[][] grid) {
+
+        // Check if grid is empty
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+
+        // Get rows and columns
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        // Store island count
+        int count = 0;
+
+        // Visit every cell
+        for (int i = 0; i < rows; i++) {
+
+            for (int j = 0; j < cols; j++) {
+
+                // If land is found
+                if (grid[i][j] == '1') {
+
+                    // Found a new island
+                    count++;
+
+                    // Visit all connected land
+                    dfs(grid, i, j);
+                }
+            }
+        }
+
+        // Return total islands
+        return count;
+    }
+
+    public static void main(String[] args) {
+
+        // Create grid
+        char[][] grid = {
+            {'1','1','0','0','0'},
+            {'1','1','0','0','0'},
+            {'0','0','1','0','0'},
+            {'0','0','0','1','1'}
+        };
+
+        // Count islands
+        int result = numIslands(grid);
+
+        // Print result
+        System.out.println("Number of Islands: " + result);
+    }
+}
+
