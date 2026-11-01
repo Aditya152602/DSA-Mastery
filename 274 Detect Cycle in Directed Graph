@@ -1,0 +1,100 @@
+
+import java.util.*;
+
+public class DirectedCycleDFS {
+
+    // DFS function
+    static boolean dfs(
+        int node,
+        ArrayList<ArrayList<Integer>> adj,
+        boolean[] visited,
+        boolean[] pathVisited
+    ) {
+
+        // Mark current node as visited
+        visited[node] = true;
+
+        // Mark node in current recursion path
+        pathVisited[node] = true;
+
+        // Visit all neighboring nodes
+        for (int neighbor : adj.get(node)) {
+
+            // If neighbor is not visited
+            if (!visited[neighbor]) {
+
+                // Perform DFS on neighbor
+                if (dfs(neighbor, adj, visited, pathVisited)) {
+                    return true;
+                }
+            }
+
+            // If neighbor is already in current path
+            else if (pathVisited[neighbor]) {
+
+                // Cycle detected
+                return true;
+            }
+        }
+
+        // Remove node from current recursion path
+        pathVisited[node] = false;
+
+        return false;
+    }
+
+    // Function to detect cycle
+    static boolean isCyclic(
+        int V,
+        ArrayList<ArrayList<Integer>> adj
+    ) {
+
+        // Track visited nodes
+        boolean[] visited = new boolean[V];
+
+        // Track current DFS path
+        boolean[] pathVisited = new boolean[V];
+
+        // Check every vertex
+        for (int i = 0; i < V; i++) {
+
+            // If node is not visited
+            if (!visited[i]) {
+
+                // Call DFS
+                if (dfs(i, adj, visited, pathVisited)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+
+        // Number of vertices
+        int V = 3;
+
+        // Create adjacency list
+        ArrayList<ArrayList<Integer>> adj =
+            new ArrayList<>();
+
+        // Initialize adjacency list
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Add directed edges
+        adj.get(0).add(1);
+        adj.get(1).add(2);
+        adj.get(2).add(0);
+
+        // Check cycle
+        if (isCyclic(V, adj)) {
+            System.out.println("Cycle Detected");
+        } else {
+            System.out.println("No Cycle");
+        }
+    }
+}
