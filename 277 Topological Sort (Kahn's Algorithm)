@@ -1,0 +1,107 @@
+
+import java.util.*;
+
+public class TopologicalSort {
+
+    // Function to perform topological sorting
+    static void topoSort(
+        int V,
+        ArrayList<ArrayList<Integer>> adj
+    ) {
+
+        // Create indegree array
+        int[] indegree = new int[V];
+
+        // Calculate indegree of every vertex
+        for (int i = 0; i < V; i++) {
+
+            for (int neighbor : adj.get(i)) {
+
+                indegree[neighbor]++;
+            }
+        }
+
+        // Create Queue
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Add vertices having indegree 0
+        for (int i = 0; i < V; i++) {
+
+            if (indegree[i] == 0) {
+
+                queue.add(i);
+            }
+        }
+
+        // Store topological order
+        ArrayList<Integer> result = new ArrayList<>();
+
+        // Process Queue
+        while (!queue.isEmpty()) {
+
+            // Remove front vertex
+            int node = queue.poll();
+
+            // Add vertex to result
+            result.add(node);
+
+            // Visit neighboring vertices
+            for (int neighbor : adj.get(node)) {
+
+                // Reduce indegree
+                indegree[neighbor]--;
+
+                // If indegree becomes 0
+                if (indegree[neighbor] == 0) {
+
+                    // Add to Queue
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        // Check whether graph contains a cycle
+        if (result.size() != V) {
+
+            System.out.println(
+                "Topological Sort Not Possible (Cycle Detected)"
+            );
+
+        } else {
+
+            // Print topological order
+            System.out.println("Topological Sort:");
+
+            for (int node : result) {
+
+                System.out.print(node + " ");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // Number of vertices
+        int V = 4;
+
+        // Create adjacency list
+        ArrayList<ArrayList<Integer>> adj =
+            new ArrayList<>();
+
+        // Initialize adjacency list
+        for (int i = 0; i < V; i++) {
+
+            adj.add(new ArrayList<>());
+        }
+
+        // Add directed edges
+        adj.get(0).add(1);
+        adj.get(0).add(2);
+
+        adj.get(1).add(3);
+        adj.get(2).add(3);
+
+        // Call topological sort
+        topoSort(V, adj);
+    }
+}
