@@ -1,0 +1,73 @@
+
+import java.util.*;
+
+public class BFSExample {
+
+    // Create Node class
+    static class Node {
+
+        int data;
+        Node left, right;
+
+        // Constructor
+        Node(int data) {
+            this.data = data;
+            left = right = null;
+        }
+    }
+
+    // BFS traversal function
+    static void BFS(Node root) {
+
+        // If tree is empty
+        if (root == null) {
+            return;
+        }
+
+        // Create a Queue
+        Queue<Node> queue = new LinkedList<>();
+
+        // Insert root into Queue
+        queue.add(root);
+
+        // Process until Queue is empty
+        while (!queue.isEmpty()) {
+
+            // Remove front node
+            Node current = queue.poll();
+
+            // Print current node
+            System.out.print(current.data + " ");
+
+            // Add left child
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+
+            // Add right child
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // Create Binary Tree
+        Node root = new Node(1);
+
+        root.left = new Node(2);
+        root.right = new Node(3);
+
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        root.right.left = new Node(6);
+        root.right.right = new Node(7);
+
+        // Call BFS
+        System.out.println("BFS Traversal:");
+
+        BFS(root);
+    }
+}
