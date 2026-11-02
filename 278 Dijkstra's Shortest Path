@@ -1,0 +1,117 @@
+
+import java.util.*;
+
+public class Dijkstra {
+
+    // Store a vertex and its distance from source
+    static class Pair {
+        int node;
+        int distance;
+
+        Pair(int node, int distance) {
+            this.node = node;
+            this.distance = distance;
+        }
+    }
+
+    // Dijkstra's algorithm
+    static void dijkstra(int V, ArrayList<ArrayList<Pair>> adj, int source) {
+
+        // Store shortest distance to every vertex
+        int[] dist = new int[V];
+
+        // Initially, all distances are infinity
+        Arrays.fill(dist, Integer.MAX_VALUE);
+
+        // Create a min-heap (smallest distance comes first)
+        PriorityQueue<Pair> pq =
+            new PriorityQueue<>((a, b) -> a.distance - b.distance);
+
+        // Distance from source to itself is zero
+        dist[source] = 0;
+
+        // Insert source into priority queue
+        pq.add(new Pair(source, 0));
+
+        // Process vertices while queue is not empty
+        while (!pq.isEmpty()) {
+
+            // Remove vertex having minimum distance
+            Pair current = pq.poll();
+
+            int u = current.node;
+            int currentDistance = current.distance;
+
+            // Ignore outdated queue entries
+            if (currentDistance != dist[u]) {
+                continue;
+            }
+
+            // Visit all adjacent vertices
+            for (Pair neighbor : adj.get(u)) {
+
+                int v = neighbor.node;
+                int weight = neighbor.distance;
+
+                // Calculate new possible distance
+                int newDistance = dist[u] + weight;
+
+                // Check whether new path is shorter
+                if (newDistance < dist[v]) {
+
+                    // Update shortest distance
+                    dist[v] = newDistance;
+
+                    // Add updated distance to min-heap
+                    pq.add(new Pair(v, newDistance));
+                }
+            }
+        }
+
+        // Print shortest distances
+        System.out.println("Shortest distances from source " + source + ":");
+
+        for (int i = 0; i < V; i++) {
+            System.out.println("Vertex " + i + " = " + dist[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // Total number of vertices
+        int V = 5;
+
+        // Create adjacency list
+        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+
+        // Initialize adjacency list
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Add undirected weighted edges
+        adj.get(0).add(new Pair(1, 4));
+        adj.get(1).add(new Pair(0, 4));
+
+        adj.get(0).add(new Pair(2, 1));
+        adj.get(2).add(new Pair(0, 1));
+
+        adj.get(2).add(new Pair(1, 2));
+        adj.get(1).add(new Pair(2, 2));
+
+        adj.get(1).add(new Pair(3, 1));
+        adj.get(3).add(new Pair(1, 1));
+
+        adj.get(2).add(new Pair(3, 5));
+        adj.get(3).add(new Pair(2, 5));
+
+        adj.get(3).add(new Pair(4, 3));
+        adj.get(4).add(new Pair(3, 3));
+
+        adj.get(2).add(new Pair(4, 8));
+        adj.get(4).add(new Pair(2, 8));
+
+        // Find shortest distances from vertex 0
+        dijkstra(V, adj, 0);
+    }
+}
