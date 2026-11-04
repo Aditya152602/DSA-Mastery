@@ -1,0 +1,154 @@
+
+import java.util.*;
+
+public class KruskalMST {
+
+    // Store edge information
+    static class Edge {
+
+        int source;
+        int destination;
+        int weight;
+
+        // Constructor
+        Edge(int source, int destination, int weight) {
+            this.source = source;
+            this.destination = destination;
+            this.weight = weight;
+        }
+    }
+
+    // Disjoint Set Union class
+    static class DSU {
+
+        int[] parent;
+        int[] size;
+
+        // Initialize DSU
+        DSU(int n) {
+
+            parent = new int[n];
+            size = new int[n];
+
+            // Initially every vertex is its own parent
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        // Find the ultimate parent
+        int find(int node) {
+
+            // If node is its own parent
+            if (parent[node] == node) {
+                return node;
+            }
+
+            // Path compression
+            parent[node] = find(parent[node]);
+
+            return parent[node];
+        }
+
+        // Connect two components
+        boolean union(int u, int v) {
+
+            // Find parents of both vertices
+            int parentU = find(u);
+            int parentV = find(v);
+
+            // If parents are same, cycle exists
+            if (parentU == parentV) {
+                return false;
+            }
+
+            // Connect smaller component to larger
+            if (size[parentU] < size[parentV]) {
+                parent[parentU] = parentV;
+                size[parentV] += size[parentU];
+            } else {
+                parent[parentV] = parentU;
+                size[parentU] += size[parentV];
+            }
+
+            return true;
+        }
+    }
+
+    // Kruskal's Algorithm
+    public static void kruskal(int vertices, List<Edge> edges) {
+
+        // Sort edges by increasing weight
+        Collections.sort(edges,
+            (a, b) -> Integer.compare(a.weight, b.weight));
+
+        // Create DSU
+        DSU dsu = new DSU(vertices);
+
+        // Store total MST weight
+        int totalWeight = 0;
+
+        // Count selected edges
+        int edgeCount = 0;
+
+        System.out.println("MST Edges:");
+
+        // Process edges in sorted order
+        for (Edge edge : edges) {
+
+            // Get source and destination
+            int u = edge.source;
+            int v = edge.destination;
+
+            // Include edge only if it does not create a cycle
+            if (dsu.union(u, v)) {
+
+                // Print selected edge
+                System.out.println(u + " - " + v
+                                   + " : " + edge.weight);
+
+                // Add edge weight
+                totalWeight += edge.weight;
+
+                // Increase selected edge count
+                edgeCount++;
+
+                // Stop after selecting V-1 edges
+                if (edgeCount == vertices - 1) {
+                    break;
+                }
+            }
+        }
+
+        // Check whether graph is connected
+        if (edgeCount != vertices - 1) {
+            System.out.println("MST does not exist. Graph is disconnected.");
+            return;
+        }
+
+        // Print minimum total weight
+        System.out.println("Total MST Weight: " + totalWeight);
+    }
+
+    public static void main(String[] args) {
+
+        // Number of vertices
+        int vertices = 5;
+
+        // Create edge list
+        List<Edge> edges = new ArrayList<>();
+
+        // Add graph edges
+        edges.add(new Edge(0, 1, 2));
+        edges.add(new Edge(0, 2, 8));
+        edges.add(new Edge(0, 3, 6));
+        edges.add(new Edge(1, 2, 3));
+        edges.add(new Edge(1, 4, 7));
+        edges.add(new Edge(2, 4, 4));
+        edges.add(new Edge(3, 4, 5));
+
+        // Call Kruskal's Algorithm
+        kruskal(vertices, edges);
+    }
+}
