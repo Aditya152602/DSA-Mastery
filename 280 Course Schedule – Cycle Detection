@@ -1,0 +1,104 @@
+
+import java.util.*;
+
+public class CourseSchedule {
+
+    public static boolean canFinish(int numCourses,
+                                    int[][] prerequisites) {
+
+        // Create adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+
+        // Initialize graph for all courses
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        // Create indegree array
+        int[] indegree = new int[numCourses];
+
+        // Build the graph
+        for (int[] pair : prerequisites) {
+
+            // Course that must be completed first
+            int course = pair[1];
+
+            // Course that depends on it
+            int prerequisite = pair[0];
+
+            // Add directed edge
+            graph.get(course).add(prerequisite);
+
+            // Increase indegree
+            indegree[prerequisite]++;
+        }
+
+        // Create queue
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Add courses having indegree 0
+        for (int i = 0; i < numCourses; i++) {
+
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        // Count processed courses
+        int count = 0;
+
+        // Perform BFS
+        while (!queue.isEmpty()) {
+
+            // Remove a course from queue
+            int current = queue.poll();
+
+            // Increase processed count
+            count++;
+
+            // Visit neighboring courses
+            for (int neighbor : graph.get(current)) {
+
+                // Decrease indegree
+                indegree[neighbor]--;
+
+                // If indegree becomes 0
+                if (indegree[neighbor] == 0) {
+
+                    // Add course to queue
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        // Check whether all courses are completed
+        return count == numCourses;
+    }
+
+    public static void main(String[] args) {
+
+        // Example 1
+        int numCourses1 = 2;
+
+        int[][] prerequisites1 = {
+            {1, 0}
+        };
+
+        System.out.println(
+            canFinish(numCourses1, prerequisites1)
+        );
+
+        // Example 2: Contains a cycle
+        int numCourses2 = 3;
+
+        int[][] prerequisites2 = {
+            {1, 0},
+            {2, 1},
+            {0, 2}
+        };
+
+        System.out.println(
+            canFinish(numCourses2, prerequisites2)
+        );
+    }
+}
