@@ -1,0 +1,97 @@
+
+public class FloodFill {
+
+    // DFS function
+    public static void dfs(int[][] image, int row, int col,
+                           int oldColor, int newColor) {
+
+        // Get number of rows
+        int rows = image.length;
+
+        // Get number of columns
+        int cols = image[0].length;
+
+        // Check whether row is outside the grid
+        if (row < 0 || row >= rows) {
+            return;
+        }
+
+        // Check whether column is outside the grid
+        if (col < 0 || col >= cols) {
+            return;
+        }
+
+        // Check whether the current cell has old color
+        if (image[row][col] != oldColor) {
+            return;
+        }
+
+        // Change the current cell color
+        image[row][col] = newColor;
+
+        // Move up
+        dfs(image, row - 1, col, oldColor, newColor);
+
+        // Move down
+        dfs(image, row + 1, col, oldColor, newColor);
+
+        // Move left
+        dfs(image, row, col - 1, oldColor, newColor);
+
+        // Move right
+        dfs(image, row, col + 1, oldColor, newColor);
+    }
+
+    // Main flood fill function
+    public static int[][] floodFill(int[][] image,
+                                    int sr, int sc,
+                                    int newColor) {
+
+        // Get original color
+        int oldColor = image[sr][sc];
+
+        // If old and new colors are same
+        if (oldColor == newColor) {
+            return image;
+        }
+
+        // Start DFS from given position
+        dfs(image, sr, sc, oldColor, newColor);
+
+        // Return updated image
+        return image;
+    }
+
+    public static void main(String[] args) {
+
+        // Create input image
+        int[][] image = {
+            {1, 1, 1},
+            {1, 1, 0},
+            {1, 0, 1}
+        };
+
+        // Starting position
+        int sr = 1;
+        int sc = 1;
+
+        // New color
+        int newColor = 2;
+
+        // Call flood fill function
+        int[][] result = floodFill(image, sr, sc, newColor);
+
+        // Print updated image
+        System.out.println("Flood Fill Output:");
+
+        for (int i = 0; i < result.length; i++) {
+
+            for (int j = 0; j < result[0].length; j++) {
+
+                System.out.print(result[i][j] + " ");
+            }
+
+            System.out.println();
+        }
+    }
+}
