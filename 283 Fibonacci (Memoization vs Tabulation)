@@ -1,0 +1,32 @@
+
+public class FibonacciRecursion {
+
+    // Recursive Fibonacci function
+    public static int fibonacci(int n) {
+
+        // Base case for 0
+        if (n == 0) {
+            return 0;
+        }
+
+        // Base case for 1
+        if (n == 1) {
+            return 1;
+        }
+
+        // Calculate previous two Fibonacci numbers
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+
+        // Input number
+        int n = 10;
+
+        // Calculate Fibonacci
+        int result = fibonacci(n);
+
+        // Print result
+        System.out.println("Fibonacci: " + result);
+    }
+}
