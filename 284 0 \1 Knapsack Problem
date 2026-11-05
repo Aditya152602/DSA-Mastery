@@ -1,0 +1,51 @@
+
+public class KnapsackRecursion {
+
+    public static int knapsack(int[] weight, int[] value,
+                               int W, int n) {
+
+        // Base case: No items or no capacity
+        if (n == 0 || W == 0) {
+            return 0;
+        }
+
+        // If current item is heavier than capacity
+        if (weight[n - 1] > W) {
+
+            // Exclude the current item
+            return knapsack(weight, value, W, n - 1);
+        }
+
+        // Choice 1: Include current item
+        int include = value[n - 1]
+                + knapsack(weight, value,
+                           W - weight[n - 1], n - 1);
+
+        // Choice 2: Exclude current item
+        int exclude = knapsack(weight, value, W, n - 1);
+
+        // Return maximum value
+        return Math.max(include, exclude);
+    }
+
+    public static void main(String[] args) {
+
+        // Item weights
+        int[] weight = {1, 2, 3};
+
+        // Item values
+        int[] value = {6, 10, 12};
+
+        // Maximum bag capacity
+        int W = 5;
+
+        // Number of items
+        int n = weight.length;
+
+        // Calculate maximum value
+        int result = knapsack(weight, value, W, n);
+
+        // Print answer
+        System.out.println("Maximum Value = " + result);
+    }
+}
