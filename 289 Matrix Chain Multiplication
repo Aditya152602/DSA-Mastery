@@ -1,0 +1,53 @@
+import java.util.*;
+
+public class Main {
+
+    // Function to find minimum multiplication cost
+    static int matrixChainMultiplication(int[] dimensions) {
+
+        int n = dimensions.length;
+
+        // dp[i][j] = minimum cost to multiply matrices i to j
+        int[][] dp = new int[n][n];
+
+        // length = number of matrices in the current chain
+        for (int length = 2; length < n; length++) {
+
+            for (int i = 1; i < n - length + 1; i++) {
+
+                int j = i + length - 1;
+
+                dp[i][j] = Integer.MAX_VALUE;
+
+                // Try every possible split point
+                for (int k = i; k < j; k++) {
+
+                    int cost = dp[i][k]
+                            + dp[k + 1][j]
+                            + dimensions[i - 1] * dimensions[k] * dimensions[j];
+
+                    dp[i][j] = Math.min(dp[i][j], cost);
+                }
+            }
+        }
+
+        return dp[1][n - 1];
+    }
+
+    public static void main(String[] args) {
+
+        // Matrices:
+        // A = 10 x 30
+        // B = 30 x 5
+        // C = 5 x 60
+        //
+        // dimensions = [10, 30, 5, 60]
+
+        int[] dimensions = {10, 30, 5, 60};
+
+        int minimumCost = matrixChainMultiplication(dimensions);
+
+        System.out.println("Minimum number of scalar multiplications: "
+                + minimumCost);
+    }
+}
