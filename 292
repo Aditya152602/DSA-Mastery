@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class Main {
+
+    public static boolean wordBreak(String s, List<String> wordDict) {
+
+        // Convert dictionary into HashSet
+        // HashSet gives fast lookup
+        Set<String> dictionary = new HashSet<>(wordDict);
+
+        int n = s.length();
+
+        // dp[i] = true if first i characters can be formed
+        boolean[] dp = new boolean[n + 1];
+
+        // Empty string can always be formed
+        dp[0] = true;
+
+        // Check every ending position
+        for (int i = 1; i <= n; i++) {
+
+            // Try every possible starting position
+            for (int j = 0; j < i; j++) {
+
+                // Check:
+                // 1. First j characters are valid
+                // 2. s[j...i-1] is a dictionary word
+                if (dp[j] && dictionary.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[n];
+    }
+
+    public static void main(String[] args) {
+
+        String s = "leetcode";
+
+        List<String> wordDict = Arrays.asList(
+                "leet",
+                "code"
+        );
+
+        boolean result = wordBreak(s, wordDict);
+
+        System.out.println("Can the string be segmented? " + result);
+    }
+}
