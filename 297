@@ -1,0 +1,86 @@
+public class Main {
+
+    // Merge two sorted parts
+    static void merge(int[] arr, int left, int mid, int right) {
+
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        // Copy left part
+        for (int i = 0; i < n1; i++) {
+            L[i] = arr[left + i];
+        }
+
+        // Copy right part
+        for (int i = 0; i < n2; i++) {
+            R[i] = arr[mid + 1 + i];
+        }
+
+        int i = 0;
+        int j = 0;
+        int k = left;
+
+        // Compare and merge
+        while (i < n1 && j < n2) {
+
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+
+            k++;
+        }
+
+        // Copy remaining elements from L
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        // Copy remaining elements from R
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    // Merge Sort
+    static void mergeSort(int[] arr, int left, int right) {
+
+        if (left >= right) {
+            return;
+        }
+
+        int mid = left + (right - left) / 2;
+
+        // Sort left half
+        mergeSort(arr, left, mid);
+
+        // Sort right half
+        mergeSort(arr, mid + 1, right);
+
+        // Merge both sorted halves
+        merge(arr, left, mid, right);
+    }
+
+    public static void main(String[] args) {
+
+        int[] arr = {38, 27, 43, 3, 9, 82, 10};
+
+        mergeSort(arr, 0, arr.length - 1);
+
+        System.out.print("Sorted array: ");
+
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
+}
