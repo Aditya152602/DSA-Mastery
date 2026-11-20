@@ -1,0 +1,74 @@
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class Main {
+
+    static int count = 0;
+    static int answer = -1;
+
+    public static void inorder(TreeNode root, int k) {
+
+        // Base case
+        if (root == null) {
+            return;
+        }
+
+        // 1. Visit left subtree
+        inorder(root.left, k);
+
+        // If answer is already found, stop
+        if (answer != -1) {
+            return;
+        }
+
+        // 2. Visit current node
+        count++;
+
+        // Check if this is the Kth element
+        if (count == k) {
+            answer = root.val;
+            return;
+        }
+
+        // 3. Visit right subtree
+        inorder(root.right, k);
+    }
+
+    public static int kthSmallest(TreeNode root, int k) {
+
+        count = 0;
+        answer = -1;
+
+        inorder(root, k);
+
+        return answer;
+    }
+
+    public static void main(String[] args) {
+
+        /*
+                 3
+                / \
+               1   4
+                \
+                 2
+        */
+
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(4);
+        root.left.right = new TreeNode(2);
+
+        int k = 1;
+
+        System.out.println("Kth smallest element: "
+                + kthSmallest(root, k));
+    }
+}
