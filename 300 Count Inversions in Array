@@ -1,0 +1,97 @@
+public class Main {
+
+    // Main function to count inversions
+    public static int countInversions(int[] arr) {
+
+        return mergeSort(arr, 0, arr.length - 1);
+    }
+
+    // Merge Sort
+    public static int mergeSort(int[] arr, int low, int high) {
+
+        // Base case
+        if (low >= high) {
+            return 0;
+        }
+
+        // Find middle
+        int mid = low + (high - low) / 2;
+
+        // Count inversions in left half
+        int count = mergeSort(arr, low, mid);
+
+        // Count inversions in right half
+        count += mergeSort(arr, mid + 1, high);
+
+        // Count inversions while merging
+        count += merge(arr, low, mid, high);
+
+        return count;
+    }
+
+    // Merge two sorted halves
+    public static int merge(int[] arr, int low, int mid, int high) {
+
+        int[] temp = new int[high - low + 1];
+
+        int i = low;
+        int j = mid + 1;
+        int k = 0;
+
+        int inversions = 0;
+
+        while (i <= mid && j <= high) {
+
+            // No inversion
+            if (arr[i] <= arr[j]) {
+
+                temp[k] = arr[i];
+                i++;
+            }
+
+            // Inversion found
+            else {
+
+                temp[k] = arr[j];
+
+                // All remaining elements in left
+                // are greater than arr[j]
+                inversions += (mid - i + 1);
+
+                j++;
+            }
+
+            k++;
+        }
+
+        // Copy remaining left elements
+        while (i <= mid) {
+            temp[k] = arr[i];
+            i++;
+            k++;
+        }
+
+        // Copy remaining right elements
+        while (j <= high) {
+            temp[k] = arr[j];
+            j++;
+            k++;
+        }
+
+        // Copy temp back to original array
+        for (int x = 0; x < temp.length; x++) {
+            arr[low + x] = temp[x];
+        }
+
+        return inversions;
+    }
+
+    public static void main(String[] args) {
+
+        int[] arr = {3, 1, 2, 4};
+
+        int result = countInversions(arr);
+
+        System.out.println("Number of inversions: " + result);
+    }
+}
