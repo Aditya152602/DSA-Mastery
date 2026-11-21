@@ -1,0 +1,38 @@
+public class Main {
+
+    static int findPeakElement(int[] arr) {
+
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low < high) {
+
+            int mid = low + (high - low) / 2;
+
+            if (arr[mid] < arr[mid + 1]) {
+
+                // We are going upward,
+                // so peak must be on the right.
+                low = mid + 1;
+
+            } else {
+
+                // We are going downward,
+                // so peak can be at mid or on the left.
+                high = mid;
+            }
+        }
+
+        return low;
+    }
+
+    public static void main(String[] args) {
+
+        int[] arr = {1, 2, 3, 1};
+
+        int index = findPeakElement(arr);
+
+        System.out.println("Peak index: " + index);
+        System.out.println("Peak value: " + arr[index]);
+    }
+}
