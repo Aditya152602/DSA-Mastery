@@ -1,0 +1,96 @@
+import java.util.*;
+
+public class Main {
+
+    static int n;
+    static List<List<String>> solutions = new ArrayList<>();
+
+    static boolean[] columns;
+    static boolean[] diagonal1;
+    static boolean[] diagonal2;
+
+    static char[][] board;
+
+    public static List<List<String>> solveNQueens(int size) {
+
+        n = size;
+
+        board = new char[n][n];
+
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(board[i], '.');
+        }
+
+        columns = new boolean[n];
+        diagonal1 = new boolean[2 * n - 1];
+        diagonal2 = new boolean[2 * n - 1];
+
+        backtrack(0);
+
+        return solutions;
+    }
+
+    static void backtrack(int row) {
+
+        // All rows have been filled
+        if (row == n) {
+
+            List<String> current = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                current.add(new String(board[i]));
+            }
+
+            solutions.add(current);
+
+            return;
+        }
+
+        // Try every column in current row
+        for (int col = 0; col < n; col++) {
+
+            int d1 = row + col;
+            int d2 = row - col + n - 1;
+
+            // Check if position is safe
+            if (columns[col] || diagonal1[d1] || diagonal2[d2]) {
+                continue;
+            }
+
+            // Place queen
+            board[row][col] = 'Q';
+
+            columns[col] = true;
+            diagonal1[d1] = true;
+            diagonal2[d2] = true;
+
+            // Move to next row
+            backtrack(row + 1);
+
+            // Backtrack: remove queen
+            board[row][col] = '.';
+
+            columns[col] = false;
+            diagonal1[d1] = false;
+            diagonal2[d2] = false;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int n = 4;
+
+        List<List<String>> result = solveNQueens(n);
+
+        System.out.println("Number of solutions: " + result.size());
+
+        for (List<String> solution : result) {
+
+            System.out.println();
+
+            for (String row : solution) {
+                System.out.println(row);
+            }
+        }
+    }
+}
