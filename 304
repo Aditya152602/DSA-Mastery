@@ -1,0 +1,50 @@
+import java.util.*;
+
+public class Main {
+
+    static void permute(int[] arr, int index, List<List<Integer>> result) {
+
+        // Base case
+        if (index == arr.length) {
+
+            List<Integer> current = new ArrayList<>();
+
+            for (int num : arr) {
+                current.add(num);
+            }
+
+            result.add(current);
+            return;
+        }
+
+        // Try every element from index to end
+        for (int i = index; i < arr.length; i++) {
+
+            // Choose
+            swap(arr, index, i);
+
+            // Explore
+            permute(arr, index + 1, result);
+
+            // Undo / Backtrack
+            swap(arr, index, i);
+        }
+    }
+
+    static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void main(String[] args) {
+
+        int[] arr = {1, 2, 3};
+
+        List<List<Integer>> result = new ArrayList<>();
+
+        permute(arr, 0, result);
+
+        System.out.println(result);
+    }
+}
