@@ -1,0 +1,87 @@
+import java.util.*;
+
+public class Main {
+
+    static int n;
+
+    static int[] rowMove = {1, 0, 0, -1};
+    static int[] colMove = {0, -1, 1, 0};
+
+    static char[] direction = {'D', 'L', 'R', 'U'};
+
+    static void solve(int[][] maze, int row, int col,
+                      boolean[][] visited, String path,
+                      List<String> result) {
+
+        // Destination reached
+        if (row == n - 1 && col == n - 1) {
+            result.add(path);
+            return;
+        }
+
+        // Try all 4 directions
+        for (int i = 0; i < 4; i++) {
+
+            int newRow = row + rowMove[i];
+            int newCol = col + colMove[i];
+
+            // Check whether the move is valid
+            if (isSafe(maze, newRow, newCol, visited)) {
+
+                // Mark current cell as visited
+                visited[newRow][newCol] = true;
+
+                // Move to next cell
+                solve(maze, newRow, newCol,
+                      visited, path + direction[i], result);
+
+                // BACKTRACK
+                visited[newRow][newCol] = false;
+            }
+        }
+    }
+
+    static boolean isSafe(int[][] maze, int row, int col,
+                          boolean[][] visited) {
+
+        return row >= 0 && row < n &&
+               col >= 0 && col < n &&
+               maze[row][col] == 1 &&
+               !visited[row][col];
+    }
+
+    public static List<String> findPaths(int[][] maze) {
+
+        n = maze.length;
+
+        List<String> result = new ArrayList<>();
+
+        // Start or destination is blocked
+        if (maze[0][0] == 0 || maze[n - 1][n - 1] == 0) {
+            return result;
+        }
+
+        boolean[][] visited = new boolean[n][n];
+
+        // Mark starting cell
+        visited[0][0] = true;
+
+        solve(maze, 0, 0, visited, "", result);
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        int[][] maze = {
+            {1, 0, 0, 0},
+            {1, 1, 0, 1},
+            {1, 1, 0, 0},
+            {0, 1, 1, 1}
+        };
+
+        List<String> paths = findPaths(maze);
+
+        System.out.println(paths);
+    }
+}
